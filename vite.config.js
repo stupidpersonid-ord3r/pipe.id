@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   root: "pipe-fn",
-  envDir: ".",
+  envDir: "..",
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
