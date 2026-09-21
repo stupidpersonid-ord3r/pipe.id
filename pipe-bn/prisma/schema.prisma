@@ -1,0 +1,33 @@
+// Reference schema for the PIPE.ID PostgreSQL model.
+// Runtime access uses parameterized SQL in src/db/client.ts.
+// The authoritative first migration is prisma/migrations/001_init.sql.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @map("updated_at")
+  profile      Profile?
+  accounts     Account[]
+  trades       Trade[]
+  transactions AccountTransaction[]
+  sessions     RefreshSession[]
+  resetTokens  PasswordResetToken[]
+  @@map("users")
+}
+model Profile { id String @id @db.Uuid traderName String? @map("trader_name") journalName String? @map("journal_name") theme String? avatarUrl String? @map("avatar_url") backupEmail String? @map("backup_email") phoneWhatsapp String? @map("phone_whatsapp") createdAt DateTime @default(now()) @map("created_at") updatedAt DateTime @default(now()) @map("updated_at") user User @relation(fields:[id],references:[id],onDelete:Cascade) @@map("profiles") }
+model Account { id String @id @default(uuid()) @db.Uuid userId String @map("user_id") @db.Uuid name String accountType String @default("LIVE") @map("account_type") startingBalance Decimal @default(0) @map("starting_balance") @db.Decimal(14,2) currency String @default("USD") pair String? createdAt DateTime @default(now()) @map("created_at") updatedAt DateTime @default(now()) @map("updated_at") user User @relation(fields:[userId],references:[id],onDelete:Cascade) trades Trade[] transactions AccountTransaction[] @@index([userId]) @@map("accounts") }
+model AccountTransaction { id String @id @default(uuid()) @db.Uuid userId String @map("user_id") @db.Uuid accountId String @map("account_id") @db.Uuid type String amount Decimal @db.Decimal(14,2) note String? createdAt DateTime @default(now()) @map("created_at") user User @relation(fields:[userId],references:[id],onDelete:Cascade) account Account @relation(fields:[accountId],references:[id],onDelete:Cascade) @@index([accountId,createdAt]) @@map("account_transactions") }
+model Trade { id String @id @default(uuid()) @db.Uuid userId String @map("user_id") @db.Uuid accountId String? @map("account_id") @db.Uuid tradeDate DateTime @map("trade_date") @db.Date pair String direction String entryPrice Decimal @map("entry_price") @db.Decimal(18,8) exitPrice Decimal? @map("exit_price") @db.Decimal(18,8) stopLoss Decimal? @map("stop_loss") @db.Decimal(18,8) takeProfit Decimal? @map("take_profit") @db.Decimal(18,8) lotSize Decimal @default(0) @map("lot_size") @db.Decimal(12,4) result String pnl Decimal @default(0) @db.Decimal(14,2) strategy String? session String? notes String? psychology String @default("NEUTRAL") riskReward Decimal? @map("risk_reward") @db.Decimal(12,4) createdAt DateTime @default(now()) @map("created_at") updatedAt DateTime @default(now()) @map("updated_at") user User @relation(fields:[userId],references:[id],onDelete:Cascade) account Account? @relation(fields:[accountId],references:[id],onDelete:SetNull) @@index([userId]) @@index([accountId]) @@index([tradeDate]) @@index([pair]) @@index([userId,accountId,tradeDate]) @@map("trades") }
+model RefreshSession { id String @id @default(uuid()) @db.Uuid userId String @map("user_id") @db.Uuid tokenHash String @unique @map("token_hash") expiresAt DateTime @map("expires_at") revokedAt DateTime? @map("revoked_at") createdAt DateTime @default(now()) @map("created_at") user User @relation(fields:[userId],references:[id],onDelete:Cascade) @@map("refresh_sessions") }
+model PasswordResetToken { id String @id @default(uuid()) @db.Uuid userId String @map("user_id") @db.Uuid tokenHash String @unique @map("token_hash") expiresAt DateTime @map("expires_at") usedAt DateTime? @map("used_at") createdAt DateTime @default(now()) @map("created_at") user User @relation(fields:[userId],references:[id],onDelete:Cascade) @@map("password_reset_tokens") }

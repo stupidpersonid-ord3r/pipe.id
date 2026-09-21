@@ -1,0 +1,25 @@
+{
+  "name": "pipe-id",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PIPE.ID monorepo - frontend and backend",
+  "workspaces": [
+    "pipe-fn",
+    "pipe-bn"
+  ],
+  "scripts": {
+    "dev": "start \"PIPE.ID Frontend\" cmd /k \"npm run dev:fn\" && start \"PIPE.ID Backend\" cmd /k \"npm run dev:bn\"",
+    "dev:fn": "vite --config vite.config.js",
+    "dev:bn": "tsx pipe-bn/src/server.ts",
+    "build:fn": "vite build --config vite.config.js",
+    "build:bn": "tsc -p pipe-bn/tsconfig.json",
+    "build": "npm run build:fn && npm run build:bn",
+    "lint": "eslint pipe-fn",
+    "check:bn": "tsc --noEmit -p pipe-bn/tsconfig.json",
+    "db:migrate": "tsx pipe-bn/scripts/db-migrate.ts",
+    "db:check": "tsx pipe-bn/scripts/db-check.ts"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

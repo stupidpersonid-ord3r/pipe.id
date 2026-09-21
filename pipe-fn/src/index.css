@@ -1,0 +1,2078 @@
+@import "tailwindcss";
+
+/* Use the application theme class for Tailwind dark: utilities.
+   Without this override, Tailwind v4 can use the OS color scheme,
+   which makes the UI look dark even when PIPE.ID is set to Light. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================================================
+   TRADING JOURNAL THEME
+   ========================================================= */
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: #f1f5f9;
+  color: #0f172a;
+  text-rendering: optimizeLegibility;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* =========================================================
+   ROOT / THEME
+   ========================================================= */
+
+:root {
+  color-scheme: light;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --tj-radius-sm: 10px;
+  --tj-radius-md: 14px;
+  --tj-radius-lg: 18px;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+/* =========================================================
+   GREEN GLASS APP SURFACE
+   ========================================================= */
+
+.app-shell {
+  position: relative;
+  background:
+    radial-gradient(circle at 8% 0%, rgb(5 150 105 / 0.12), transparent 30%),
+    radial-gradient(circle at 92% 8%, rgb(15 23 42 / 0.10), transparent 28%),
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 58%, #eef2f0 100%);
+}
+
+.app-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 0%, rgb(5 150 105 / 0.045), transparent 45%);
+}
+
+.app-shell .ui-section {
+  border-color: rgb(15 118 110 / 0.10);
+  background: rgb(255 255 255 / 0.76);
+  box-shadow: 0 14px 40px rgb(15 23 42 / 0.045);
+  backdrop-filter: blur(14px);
+}
+
+.app-shell .bg-white,
+.app-shell [class*="bg-white/"] {
+  background-color: rgb(255 255 255 / 0.68) !important;
+  backdrop-filter: blur(14px);
+}
+
+.app-shell header {
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.68), rgb(236 253 245 / 0.52)) !important;
+  border-bottom: 1px solid rgb(15 118 110 / 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.app-shell .input {
+  background: rgb(255 255 255 / 0.72);
+  border-color: rgb(15 118 110 / 0.12);
+}
+
+.app-shell .border-slate-200 {
+  border-color: rgb(15 118 110 / 0.10) !important;
+}
+
+.app-shell .border-slate-300 {
+  border-color: rgb(15 118 110 / 0.14) !important;
+}
+
+.app-shell .shadow-sm {
+  box-shadow: 0 10px 30px rgb(15 23 42 / 0.045) !important;
+}
+
+html.dark .app-shell {
+  background:
+    radial-gradient(circle at 12% 0%, rgb(16 185 129 / 0.14), transparent 30%),
+    radial-gradient(circle at 90% 12%, rgb(255 255 255 / 0.045), transparent 28%),
+    linear-gradient(145deg, #06140f 0%, #071c15 48%, #020b08 100%);
+}
+
+html.dark .app-shell::before {
+  background: radial-gradient(circle at 50% 0%, rgb(52 211 153 / 0.06), transparent 48%);
+}
+
+html.dark .app-shell .ui-section {
+  border-color: rgb(52 211 153 / 0.12);
+  background: rgb(6 24 18 / 0.78);
+  box-shadow: 0 18px 44px rgb(0 0 0 / 0.18);
+}
+
+html.dark .app-shell .bg-white {
+  background-color: rgb(6 24 18 / 0.72) !important;
+}
+
+html.dark .app-shell .border-slate-200 {
+  border-color: rgb(52 211 153 / 0.11) !important;
+}
+
+.pair-chart-scroll {
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.35rem;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pair-chart-scroll::-webkit-scrollbar {
+  width: 7px;
+}
+
+.pair-chart-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgb(16 185 129 / 0.28);
+}
+
+html.dark .pair-chart-scroll::-webkit-scrollbar-thumb {
+  background: rgb(52 211 153 / 0.24);
+}
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:not(:disabled),
+a {
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgb(15 23 42 / 0.14);
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+html.dark body {
+  background: #020617;
+  color: #e2e8f0;
+}
+
+/* Main backgrounds */
+
+html.dark .bg-slate-100 {
+  background-color: #020617 !important;
+}
+
+html.dark .bg-white {
+  background-color: #0f172a !important;
+}
+
+/* Text */
+
+html.dark .text-slate-950 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-800 {
+  color: #e2e8f0 !important;
+}
+
+html.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-black {
+  color: #f8fafc !important;
+}
+
+html.dark .text-gray-900,
+html.dark .text-gray-800,
+html.dark .text-zinc-900,
+html.dark .text-neutral-900 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-gray-700,
+html.dark .text-zinc-700,
+html.dark .text-neutral-700 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-gray-600,
+html.dark .text-zinc-600,
+html.dark .text-neutral-600 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-gray-500,
+html.dark .text-zinc-500,
+html.dark .text-neutral-500 {
+  color: #94a3b8 !important;
+}
+
+/* Borders */
+
+html.dark .border-slate-200 {
+  border-color: #1e293b !important;
+}
+
+html.dark .border-slate-300 {
+  border-color: #334155 !important;
+}
+
+html.dark .border-slate-800 {
+  border-color: #1e293b !important;
+}
+
+/* Inputs */
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #0f172a;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b;
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  border-color: #64748b;
+}
+
+/* Hover */
+
+html.dark .hover\:bg-slate-50:hover {
+  background-color: #1e293b !important;
+}
+
+html.dark .hover\:bg-slate-100:hover {
+  background-color: #1e293b !important;
+}
+
+/* Shadow */
+
+html.dark .shadow-sm {
+  box-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.35);
+}
+
+/* Divider */
+
+html.dark .bg-slate-200 {
+  background-color: #1e293b !important;
+}
+
+/* Dark sidebar */
+
+html.dark .bg-slate-950 {
+  background-color: #020617 !important;
+}
+
+html.dark .bg-slate-900 {
+  background-color: #0f172a !important;
+}
+
+/* Active navigation */
+
+html.dark .bg-white.text-slate-950 {
+  background-color: #f8fafc !important;
+  color: #020617 !important;
+}
+
+/* Light buttons in dark mode */
+
+html.dark button.bg-white.text-slate-950,
+html.dark a.bg-white.text-slate-950 {
+  background-color: #f8fafc !important;
+  color: #020617 !important;
+}
+
+html.dark button.dark\:bg-white.dark\:text-slate-950 {
+  background-color: #f8fafc !important;
+  color: #020617 !important;
+}
+
+html.dark button.dark\:bg-slate-100.dark\:text-slate-950 {
+  background-color: #f8fafc !important;
+  color: #020617 !important;
+}
+
+
+/* Keep Tailwind dark variants (especially white icon surfaces) from being
+   overridden by the broad dark-mode utility fallbacks above. */
+html.dark .dark\:bg-white {
+  background-color: #f8fafc !important;
+}
+
+html.dark .dark\:text-slate-950 {
+  color: #020617 !important;
+}
+
+html.dark .dark\:bg-slate-50 {
+  background-color: #0f172a !important;
+}
+
+html.dark .dark\:bg-slate-50\/50 {
+  background-color: rgb(15 23 42 / 0.5) !important;
+}
+
+/* =========================================================
+   STATUS COLORS — DARK MODE
+   ========================================================= */
+
+html.dark .text-green-700 {
+  color: #86efac !important;
+}
+
+html.dark .text-emerald-700 {
+  color: #6ee7b7 !important;
+}
+
+html.dark .text-red-700 {
+  color: #fca5a5 !important;
+}
+
+html.dark .text-blue-700 {
+  color: #93c5fd !important;
+}
+
+html.dark .text-orange-700 {
+  color: #fdba74 !important;
+}
+
+html.dark .text-amber-800,
+html.dark .text-amber-900 {
+  color: #fcd34d !important;
+}
+
+/* Status backgrounds */
+
+html.dark .bg-green-50 {
+  background-color: rgb(20 83 45 / 0.35) !important;
+}
+
+html.dark .bg-emerald-50 {
+  background-color: rgb(6 78 59 / 0.35) !important;
+}
+
+html.dark .bg-red-50 {
+  background-color: rgb(127 29 29 / 0.35) !important;
+}
+
+html.dark .bg-blue-50 {
+  background-color: rgb(30 58 138 / 0.35) !important;
+}
+
+html.dark .bg-orange-50 {
+  background-color: rgb(124 45 18 / 0.35) !important;
+}
+
+html.dark .bg-amber-50 {
+  background-color: rgb(120 53 15 / 0.35) !important;
+}
+
+/* Tables */
+
+html.dark td,
+html.dark th {
+  color: inherit;
+}
+
+html.dark option {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+/* =========================================================
+   GLOBAL TRANSITIONS
+   ========================================================= */
+
+body,
+header,
+main,
+section,
+input,
+select,
+textarea,
+button {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background: #fff;
+  padding: 0.65rem 0.8rem;
+  color: #0f172a;
+  font-size: 0.875rem;
+  outline: none;
+
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.input:hover {
+  border-color: #94a3b8;
+}
+
+.input:focus {
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgb(15 23 42 / 0.08);
+}
+
+.input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: #f8fafc;
+}
+
+.dark .input {
+  border-color: #334155;
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.dark .input:hover {
+  border-color: #475569;
+}
+
+.dark .input:focus {
+  border-color: #94a3b8;
+  box-shadow: 0 0 0 3px rgb(148 163 184 / 0.12);
+}
+
+.dark .input:disabled {
+  background: #020617;
+}
+
+
+
+
+/* =========================================================
+   SHARED SELECT CONTROLS
+   ========================================================= */
+
+/* Native selects use the same surface, spacing and arrow in both themes.
+   `color-scheme` also asks the browser to render its native option popup
+   with the matching palette. */
+select:not([multiple]) {
+  appearance: none;
+  -webkit-appearance: none;
+  color-scheme: light;
+  padding-right: 2.65rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364758b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 16px;
+}
+
+select.appearance-none {
+  background-image: none;
+}
+
+select:not([multiple]) option {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+select:not([multiple]):focus {
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgb(5 150 105 / 0.12);
+}
+
+html.dark select:not([multiple]) {
+  color-scheme: dark;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+html.dark select.appearance-none {
+  background-image: none;
+}
+
+html.dark select:not([multiple]) option {
+  background: #062018;
+  color: #f0fdf4;
+}
+
+html.dark select:not([multiple]):focus {
+  border-color: #34d399 !important;
+  box-shadow: 0 0 0 3px rgb(52 211 153 / 0.14);
+}
+
+/* Shared trigger for custom dropdowns (account/pair). */
+.select-trigger {
+  min-height: 42px;
+  border: 1px solid rgb(6 78 59 / 0.12);
+  border-radius: 0.75rem;
+  background: rgb(255 255 255 / 0.58);
+  color: #0f172a;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.72);
+}
+
+.select-trigger:hover {
+  border-color: rgb(6 78 59 / 0.22);
+  background: rgb(255 255 255 / 0.74);
+}
+
+.select-trigger:focus-visible {
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgb(5 150 105 / 0.12);
+}
+
+html.dark .select-trigger {
+  border-color: rgb(52 211 153 / 0.14);
+  background: rgb(3 26 20 / 0.72);
+  color: #f0fdf4;
+  box-shadow: inset 0 1px 0 rgb(110 231 183 / 0.035);
+}
+
+html.dark .select-trigger:hover {
+  border-color: rgb(52 211 153 / 0.25);
+  background: rgb(4 39 29 / 0.84);
+}
+
+html.dark .select-trigger:focus-visible {
+  border-color: #34d399;
+  box-shadow: 0 0 0 3px rgb(52 211 153 / 0.14);
+}
+
+/* Custom dropdowns (account/pair) share the same visual language as native
+   selects instead of becoming a separate gray/white component. */
+.select-menu {
+  border: 1px solid rgb(6 78 59 / 0.12);
+  background: rgb(255 255 255 / 0.92);
+  color: #0f172a;
+  box-shadow: 0 18px 45px rgb(15 23 42 / 0.14);
+  backdrop-filter: blur(18px);
+}
+
+.select-menu-item {
+  color: #334155;
+}
+
+.select-menu-item:hover {
+  background: rgb(236 253 245 / 0.9);
+}
+
+.select-menu-item.is-selected {
+  background: rgb(209 250 229 / 0.9);
+  color: #064e3b;
+}
+
+html.dark .select-menu {
+  border-color: rgb(52 211 153 / 0.16);
+  background: rgb(4 39 29 / 0.96);
+  color: #f0fdf4;
+  box-shadow: 0 22px 55px rgb(0 0 0 / 0.30);
+}
+
+html.dark .select-menu-item {
+  color: #d1fae5;
+}
+
+html.dark .select-menu-item:hover {
+  background: rgb(6 78 59 / 0.52);
+}
+
+html.dark .select-menu-item.is-selected {
+  background: rgb(6 95 70 / 0.62);
+  color: #ecfdf5;
+}
+
+/* ui-section historically clips children. An open pair picker needs to
+   escape the section so its list is never cut off at the card edge. */
+.ui-section:has(.instrument-picker-open) {
+  overflow: visible;
+}
+
+.instrument-picker-open {
+  z-index: 100;
+}
+
+.instrument-picker-open > .select-menu {
+  max-height: min(30rem, calc(100dvh - 8rem));
+}
+
+@media (max-width: 640px) {
+  .instrument-picker-open > .select-menu {
+    max-height: min(26rem, calc(100dvh - 6.5rem));
+  }
+}
+
+/* =========================================================
+   AUTH INPUTS
+   ========================================================= */
+
+.auth-field {
+  min-width: 0;
+}
+
+.auth-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.auth-input {
+  min-height: 46px;
+  padding-top: 0.7rem !important;
+  padding-bottom: 0.7rem !important;
+  font-size: 0.875rem;
+}
+
+.auth-input-icon {
+  padding-left: 2.75rem !important;
+}
+
+.auth-input-password {
+  padding-right: 2.9rem !important;
+}
+
+.auth-input-leading {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  z-index: 2;
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.auth-input-toggle {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  z-index: 3;
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.auth-input-toggle:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.dark .auth-input-toggle:hover {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+.auth-input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.auth-strength {
+  margin-top: 0.6rem;
+}
+
+.auth-strength-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.45rem;
+  color: #94a3b8;
+  font-size: 0.6875rem;
+  line-height: 1rem;
+}
+
+.auth-strength-head strong {
+  font-weight: 700;
+}
+
+.auth-input-invalid {
+  border-color: #f87171 !important;
+}
+
+.auth-input-invalid:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgb(239 68 68 / 0.08) !important;
+}
+
+.auth-field-error {
+  margin-top: 0.4rem;
+  padding-left: 0.125rem;
+  color: #dc2626;
+  font-size: 0.6875rem;
+  line-height: 1.25rem;
+}
+
+.dark .auth-input-invalid {
+  border-color: #f87171 !important;
+}
+
+.dark .auth-field-error {
+  color: #fca5a5;
+}
+
+.dark .auth-input::placeholder {
+  color: #64748b;
+}
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+:focus-visible {
+  outline: 2px solid #64748b;
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+header {
+  box-shadow:
+    0 1px 0 rgb(15 23 42 / 0.04),
+    0 4px 16px rgb(15 23 42 / 0.03);
+}
+
+.dark header {
+  box-shadow:
+    0 1px 0 rgb(148 163 184 / 0.06),
+    0 4px 18px rgb(0 0 0 / 0.18);
+}
+
+/* =========================================================
+   UI SECTION
+   ========================================================= */
+
+.ui-section {
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+}
+
+.dark .ui-section {
+  border-color: #1e293b;
+  background: #0f172a;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+}
+
+/* An open custom dropdown must escape the card and paint above the next card. */
+.ui-section:has(.custom-select.is-open) {
+  z-index: 100;
+  overflow: visible;
+}
+
+html.dark .ui-section:has(.custom-select.is-open) {
+  z-index: 100;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+table th {
+  white-space: nowrap;
+}
+
+/* =========================================================
+   DATA SCROLL
+   ========================================================= */
+
+.data-scroll {
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.data-scroll-y {
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* =========================================================
+   PHOTO / CAMERA
+   ========================================================= */
+
+.photo-canvas,
+.photo-canvas img,
+.photo-canvas video {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* =========================================================
+   GLOBAL MOTION SYSTEM
+   ========================================================= */
+
+@keyframes tj-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tj-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.975);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.page-enter {
+  animation: tj-fade-up 0.32s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.ui-card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ui-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgb(15 23 42 / 0.07);
+}
+
+.ui-interactive {
+  transition:
+    transform 0.16s ease,
+    opacity 0.16s ease,
+    background-color 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.ui-interactive:active {
+  transform: scale(0.985);
+}
+
+.modal-enter {
+  animation: tj-scale-in 0.22s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.chart-enter {
+  animation: tj-fade-up 0.42s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+/* =========================================================
+   AUTH PAGE TRANSITIONS
+   ========================================================= */
+
+@keyframes authPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.auth-page-enter {
+  animation: authPageEnter 0.42s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.auth-link {
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.auth-link:hover {
+  opacity: 0.8;
+}
+
+.auth-language {
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.auth-language:active {
+  transform: scale(0.94);
+}
+
+
+.auth-controls {
+  z-index: 20;
+}
+
+.auth-controls button {
+  flex-shrink: 0;
+}
+
+.auth-theme {
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.auth-theme:hover {
+  transform: translateY(-1px);
+}
+
+.auth-theme:active {
+  transform: scale(0.94);
+}
+
+.auth-flip-face {
+  overflow: hidden;
+}
+
+.auth-flip-face form {
+  position: relative;
+}
+
+@media (max-width: 640px) {
+  .auth-flip-face {
+    overflow-y: auto;
+  }
+
+  .auth-controls {
+    right: 1rem;
+    top: 1rem;
+  }
+}
+
+/* =========================================================
+   AUTH FLIP CARD
+   ========================================================= */
+
+.auth-flip-container {
+  position: relative;
+  width: 100%;
+  perspective: 1400px;
+
+  /*
+   * The entrance animation is intentionally placed here,
+   * not on .auth-flip-card, so it does not conflict
+   * with rotateY() during the flip.
+   */
+  animation: authCardIntro 0.45s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.auth-flip-card {
+  position: relative;
+  width: 100%;
+  min-height: 700px;
+
+  transform-style: preserve-3d;
+
+  transition:
+    transform 0.6s cubic-bezier(.22, 1, .36, 1);
+}
+
+.auth-flip-card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.auth-flip-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 700px;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.auth-flip-front {
+  transform: rotateY(0deg);
+}
+
+.auth-flip-back {
+  transform: rotateY(180deg);
+}
+
+/* Entrance animation */
+
+@keyframes authCardIntro {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  header {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .data-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  main {
+    padding-bottom: 24px;
+  }
+
+  .auth-shell {
+    align-items: flex-start;
+  }
+
+  .auth-flip-container {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .auth-flip-card,
+  .auth-flip-face {
+    min-height: 760px;
+  }
+
+  .auth-flip-face {
+    overflow-y: auto;
+  }
+
+  .auth-flip-face > form {
+    margin-bottom: 0.75rem;
+  }
+
+  .auth-flip-face > p {
+    margin-top: 2rem;
+    margin-bottom: 0.25rem;
+  }
+
+  table th,
+  table td {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .page-enter,
+  .ui-card,
+  .ui-interactive,
+  .modal-enter,
+  .chart-enter {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .auth-page-enter,
+  .auth-flip-container {
+    animation: none;
+  }
+
+  .auth-flip-card {
+    transition: none;
+  }
+
+  .auth-flip-face {
+    will-change: auto;
+  }
+
+  .auth-link,
+  .auth-language {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   PIPE.ID VISUAL POLISH — DEEP GREEN / SOFT MONOCHROME
+   ========================================================= */
+
+:root {
+  --tj-green-950: #022c22;
+  --tj-green-900: #064e3b;
+  --tj-green-700: #047857;
+  --tj-green-500: #10b981;
+  --tj-light-border: rgb(15 23 42 / 0.055);
+  --tj-dark-border: rgb(110 231 183 / 0.09);
+}
+
+body {
+  background:
+    radial-gradient(circle at 100% 0%, rgb(15 23 42 / 0.035), transparent 34%),
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 58%, #f1f5f9 100%);
+}
+
+html.dark body {
+  background:
+    radial-gradient(circle at 85% 0%, rgb(16 185 129 / 0.12), transparent 32%),
+    radial-gradient(circle at 0% 100%, rgb(6 78 59 / 0.20), transparent 36%),
+    linear-gradient(135deg, #020617 0%, #032b22 54%, #020617 100%);
+}
+
+header {
+  background: rgb(255 255 255 / 0.72) !important;
+  border-bottom-color: transparent !important;
+  box-shadow: 0 10px 34px rgb(15 23 42 / 0.035);
+}
+
+html.dark header {
+  background: rgb(2 44 34 / 0.58) !important;
+  border-bottom-color: transparent !important;
+  box-shadow: 0 12px 36px rgb(0 0 0 / 0.16);
+}
+
+.ui-section,
+.ui-card,
+section.rounded-xl.border,
+section.rounded-2xl.border,
+div.rounded-xl.border.bg-white,
+div.rounded-2xl.border.bg-white {
+  border-color: var(--tj-light-border) !important;
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.97), rgb(248 250 252 / 0.91)) !important;
+  box-shadow:
+    0 10px 35px rgb(15 23 42 / 0.045),
+    inset 0 1px 0 rgb(255 255 255 / 0.75);
+}
+
+html.dark .ui-section,
+html.dark .ui-card,
+html.dark section.rounded-xl.border,
+html.dark section.rounded-2xl.border,
+html.dark div.rounded-xl.border.bg-white,
+html.dark div.rounded-2xl.border.bg-white {
+  border-color: var(--tj-dark-border) !important;
+  background:
+    linear-gradient(145deg, rgb(6 78 59 / 0.28), rgb(15 23 42 / 0.94)) !important;
+  box-shadow:
+    0 18px 44px rgb(0 0 0 / 0.18),
+    inset 0 1px 0 rgb(110 231 183 / 0.035);
+}
+
+.ui-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 42px rgb(15 23 42 / 0.075),
+    inset 0 1px 0 rgb(255 255 255 / 0.75);
+}
+
+html.dark .ui-card:hover {
+  box-shadow:
+    0 20px 48px rgb(0 0 0 / 0.24),
+    inset 0 1px 0 rgb(110 231 183 / 0.06);
+}
+
+.input {
+  border-color: var(--tj-light-border) !important;
+  background: rgb(255 255 255 / 0.76) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.8);
+}
+
+.dark .input {
+  border-color: var(--tj-dark-border) !important;
+  background: rgb(2 44 34 / 0.28) !important;
+  box-shadow: inset 0 1px 0 rgb(110 231 183 / 0.035);
+}
+
+.input:focus {
+  border-color: rgb(5 150 105 / 0.55) !important;
+  box-shadow: 0 0 0 3px rgb(16 185 129 / 0.10) !important;
+}
+
+.input-invalid {
+  border-color: rgb(244 63 94 / 0.72) !important;
+  box-shadow: 0 0 0 3px rgb(244 63 94 / 0.08) !important;
+}
+
+.dark .input-invalid {
+  border-color: rgb(251 113 133 / 0.72) !important;
+}
+
+table thead {
+  background: rgb(248 250 252 / 0.66) !important;
+}
+
+html.dark table thead {
+  background: rgb(2 44 34 / 0.34) !important;
+}
+
+table tbody tr {
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+table tbody tr:hover {
+  background: rgb(16 185 129 / 0.045) !important;
+}
+
+html.dark table tbody tr:hover {
+  background: rgb(16 185 129 / 0.065) !important;
+}
+
+/* Auth flip: GPU-friendly transform only, without blur/filter during the flip. */
+.auth-flip-container {
+  transform: translateZ(0);
+  contain: layout paint;
+}
+
+.auth-flip-card {
+  min-height: 680px;
+  will-change: transform;
+  transition: transform 680ms cubic-bezier(.16, 1, .3, 1);
+  transform: translateZ(0);
+}
+
+.auth-flip-face {
+  min-height: 680px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.auth-flip-front {
+  transform: rotateY(0deg) translateZ(0);
+}
+
+.auth-flip-back {
+  transform: rotateY(180deg) translateZ(0);
+}
+
+.auth-flip-card.is-flipped {
+  transform: rotateY(180deg) translateZ(0);
+}
+
+.auth-logo {
+  display: block;
+  width: 112px;
+  height: 68px;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 640px) {
+  .auth-flip-card,
+  .auth-flip-face {
+    min-height: 720px;
+  }
+
+  .auth-flip-card {
+    transition-duration: 620ms;
+  }
+
+  .auth-flip-face {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .auth-logo {
+    width: 96px;
+    height: 62px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-flip-card {
+    transition: none !important;
+  }
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: transparent;
+}
+
+main {
+  min-width: 0;
+}
+
+/* Auth password strength: compact four-level meter without requirement chips. */
+.auth-strength-bars {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.auth-strength-bars span {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgb(226 232 240 / 0.85);
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.auth-strength-bars span.is-active {
+  background: rgb(16 185 129 / 0.85);
+}
+
+html.dark .auth-strength-bars span {
+  background: rgb(30 41 59 / 0.85);
+}
+
+html.dark .auth-strength-bars span.is-active {
+  background: rgb(52 211 153 / 0.8);
+}
+
+/* Dense pair charts stay compact while remaining fully browsable. */
+.pnl-pair-scroll {
+  max-height: 30rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+@media (max-width: 640px) {
+  .pnl-pair-scroll {
+    max-height: 24rem;
+    overflow-x: auto;
+  }
+}
+
+/* Auth surface: green-tinted glass instead of solid white. */
+.auth-shell {
+  background:
+    radial-gradient(circle at 12% 8%, rgb(16 185 129 / 0.12), transparent 30%),
+    radial-gradient(circle at 90% 90%, rgb(15 23 42 / 0.08), transparent 34%),
+    linear-gradient(145deg, #f8faf9 0%, #eef5f1 52%, #f8fafc 100%);
+}
+
+html.dark .auth-shell {
+  background:
+    radial-gradient(circle at 12% 8%, rgb(16 185 129 / 0.16), transparent 30%),
+    radial-gradient(circle at 90% 90%, rgb(52 211 153 / 0.07), transparent 34%),
+    linear-gradient(145deg, #06140f 0%, #071c15 52%, #020b08 100%);
+}
+
+
+/* =========================================================
+   FINAL PIPE.ID THEME LAYER
+   Keeps both themes visually intentional and prevents legacy
+   slate/white utility surfaces from overpowering the green theme.
+   ========================================================= */
+:root {
+  --pipe-light-bg: #eef5f1;
+  --pipe-light-surface: rgb(255 255 255 / 0.62);
+  --pipe-light-surface-strong: rgb(255 255 255 / 0.78);
+  --pipe-light-border: rgb(6 78 59 / 0.10);
+  --pipe-dark-bg: #03130f;
+  --pipe-dark-surface: rgb(4 31 24 / 0.72);
+  --pipe-dark-surface-strong: rgb(5 39 29 / 0.88);
+  --pipe-dark-border: rgb(52 211 153 / 0.12);
+}
+
+body {
+  background:
+    radial-gradient(circle at 0% 0%, rgb(16 185 129 / 0.07), transparent 30%),
+    linear-gradient(145deg, #f6faf8 0%, var(--pipe-light-bg) 55%, #e9f0ec 100%);
+}
+
+html.dark body {
+  background:
+    radial-gradient(circle at 8% 0%, rgb(16 185 129 / 0.11), transparent 32%),
+    radial-gradient(circle at 100% 100%, rgb(6 78 59 / 0.16), transparent 38%),
+    linear-gradient(145deg, #02100c 0%, var(--pipe-dark-bg) 52%, #020907 100%);
+}
+
+.app-shell {
+  background:
+    radial-gradient(circle at 12% 0%, rgb(16 185 129 / 0.10), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgb(15 23 42 / 0.06), transparent 28%),
+    linear-gradient(145deg, #f8fbf9 0%, #edf5f1 54%, #e8efeb 100%);
+}
+
+html.dark .app-shell {
+  background:
+    radial-gradient(circle at 10% 0%, rgb(16 185 129 / 0.15), transparent 30%),
+    radial-gradient(circle at 88% 18%, rgb(52 211 153 / 0.05), transparent 26%),
+    linear-gradient(145deg, #03130f 0%, #052018 52%, #020a07 100%);
+}
+
+/* Sidebar */
+.app-shell > aside {
+  border-color: var(--pipe-light-border) !important;
+  background:
+    linear-gradient(180deg, rgb(248 252 250 / 0.88), rgb(232 243 238 / 0.82)) !important;
+  box-shadow: 18px 0 50px rgb(15 23 42 / 0.055);
+  backdrop-filter: blur(24px);
+}
+
+html.dark .app-shell > aside {
+  border-color: var(--pipe-dark-border) !important;
+  background:
+    linear-gradient(180deg, rgb(3 25 19 / 0.94), rgb(2 14 11 / 0.92)) !important;
+  box-shadow: 18px 0 60px rgb(0 0 0 / 0.20);
+}
+
+.app-shell > aside > div:first-child {
+  border-color: var(--pipe-light-border) !important;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.18), transparent);
+}
+
+html.dark .app-shell > aside > div:first-child {
+  border-color: var(--pipe-dark-border) !important;
+}
+
+.app-shell > aside nav a,
+.app-shell > aside nav button {
+  border: 1px solid transparent;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.app-shell > aside nav a:hover,
+.app-shell > aside nav button:hover {
+  transform: translateX(2px);
+  background: rgb(16 185 129 / 0.07) !important;
+  color: #064e3b !important;
+}
+
+html.dark .app-shell > aside nav a:hover,
+html.dark .app-shell > aside nav button:hover {
+  background: rgb(16 185 129 / 0.10) !important;
+  color: #d1fae5 !important;
+}
+
+html.dark .app-shell > aside nav a.bg-emerald-400\/15,
+html.dark .app-shell > aside nav button.bg-emerald-400\/15 {
+  background: linear-gradient(135deg, rgb(16 185 129 / 0.18), rgb(6 78 59 / 0.20)) !important;
+  border-color: rgb(52 211 153 / 0.12) !important;
+}
+
+.app-shell > aside nav a.bg-slate-950 {
+  background: linear-gradient(135deg, #064e3b, #022c22) !important;
+  box-shadow: 0 10px 26px rgb(6 78 59 / 0.18) !important;
+}
+
+.app-shell > aside > div:last-child {
+  border-color: var(--pipe-light-border) !important;
+}
+
+html.dark .app-shell > aside > div:last-child {
+  border-color: var(--pipe-dark-border) !important;
+}
+
+/* Header */
+.app-shell header {
+  min-height: 4.25rem;
+  border-bottom: 1px solid var(--pipe-light-border) !important;
+  background:
+    linear-gradient(90deg, rgb(248 252 250 / 0.72), rgb(230 246 238 / 0.55)) !important;
+  box-shadow: 0 10px 35px rgb(15 23 42 / 0.045) !important;
+}
+
+html.dark .app-shell header {
+  border-bottom-color: var(--pipe-dark-border) !important;
+  background:
+    linear-gradient(90deg, rgb(3 26 20 / 0.82), rgb(4 39 29 / 0.64)) !important;
+  box-shadow: 0 10px 40px rgb(0 0 0 / 0.16) !important;
+}
+
+/* Header controls */
+.app-shell header button.bg-white\/75,
+.app-shell header button.bg-white\/65 {
+  border: 1px solid rgb(6 78 59 / 0.08);
+  background: rgb(255 255 255 / 0.52) !important;
+  box-shadow: 0 8px 25px rgb(6 78 59 / 0.055) !important;
+}
+
+html.dark .app-shell header button.bg-white\/75,
+html.dark .app-shell header button.bg-white\/65 {
+  border-color: rgb(52 211 153 / 0.10);
+  background: rgb(5 35 27 / 0.64) !important;
+  box-shadow: 0 8px 28px rgb(0 0 0 / 0.16) !important;
+}
+
+/* Generic cards and sections */
+.app-shell .ui-section,
+.app-shell .ui-card {
+  border-color: var(--pipe-light-border) !important;
+  background: var(--pipe-light-surface) !important;
+  box-shadow: 0 14px 38px rgb(15 23 42 / 0.045) !important;
+  backdrop-filter: blur(18px);
+}
+
+html.dark .app-shell .ui-section,
+html.dark .app-shell .ui-card {
+  border-color: var(--pipe-dark-border) !important;
+  background: var(--pipe-dark-surface) !important;
+  box-shadow: 0 16px 42px rgb(0 0 0 / 0.16) !important;
+}
+
+.app-shell .input {
+  background: rgb(255 255 255 / 0.58) !important;
+  border-color: rgb(6 78 59 / 0.12) !important;
+}
+
+html.dark .app-shell .input {
+  background: rgb(3 26 20 / 0.72) !important;
+  border-color: rgb(52 211 153 / 0.14) !important;
+}
+
+/* Auth page */
+.auth-shell {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 12% 5%, rgb(16 185 129 / 0.16), transparent 28%),
+    radial-gradient(circle at 92% 92%, rgb(15 23 42 / 0.08), transparent 32%),
+    linear-gradient(145deg, #f7fbf9 0%, #eaf4ef 52%, #f1f5f3 100%);
+}
+
+html.dark .auth-shell {
+  background:
+    radial-gradient(circle at 12% 5%, rgb(16 185 129 / 0.20), transparent 28%),
+    radial-gradient(circle at 92% 92%, rgb(52 211 153 / 0.07), transparent 32%),
+    linear-gradient(145deg, #02100c 0%, #042019 54%, #020a07 100%);
+}
+
+.auth-flip-face {
+  border-color: rgb(6 78 59 / 0.10) !important;
+  background: linear-gradient(145deg, rgb(255 255 255 / 0.76), rgb(236 247 241 / 0.64)) !important;
+  box-shadow: 0 28px 80px rgb(6 78 59 / 0.10) !important;
+}
+
+html.dark .auth-flip-face {
+  border-color: rgb(52 211 153 / 0.14) !important;
+  background: linear-gradient(145deg, rgb(3 31 23 / 0.86), rgb(4 42 31 / 0.72)) !important;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 0.30) !important;
+}
+
+.auth-strength-bars span {
+  background: rgb(148 163 184 / 0.18);
+}
+
+.auth-strength-bars span.is-active {
+  background: linear-gradient(90deg, #059669, #34d399);
+}
+
+@media (max-width: 640px) {
+  .app-shell > aside {
+    width: min(56vw, 224px);
+  }
+
+  .app-shell header {
+    min-height: 4rem;
+  }
+
+  .auth-flip-card,
+  .auth-flip-face {
+    min-height: 610px;
+  }
+
+  .auth-flip-face {
+    overflow-y: auto;
+  }
+}
+
+.app-shell > aside > div:last-child > div {
+  border: 1px solid rgb(6 78 59 / 0.08);
+  background: linear-gradient(135deg, rgb(255 255 255 / 0.42), rgb(220 239 229 / 0.42)) !important;
+}
+
+html.dark .app-shell > aside > div:last-child > div {
+  border-color: rgb(52 211 153 / 0.10);
+  background: linear-gradient(135deg, rgb(5 42 31 / 0.68), rgb(2 24 18 / 0.52)) !important;
+}
+
+/* =========================================================
+   UNIFIED SELECT COMPONENT
+   Every application select uses the same custom dropdown surface in both
+   themes. The menu contains only the supplied options; there is no fake
+   "Select" option inside the list.
+   ========================================================= */
+.custom-select {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+}
+
+.custom-select-face {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 42px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgb(6 78 59 / 0.14);
+  border-radius: 0.75rem;
+  background: rgb(255 255 255 / 0.72);
+  padding: 0.625rem 0.75rem;
+  color: #0f172a;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.72), 0 4px 14px rgb(15 23 42 / 0.025);
+  backdrop-filter: blur(12px);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.custom-select-face:hover {
+  border-color: rgb(5 150 105 / 0.30);
+  background: rgb(255 255 255 / 0.88);
+}
+
+.custom-select.is-open {
+  z-index: 130;
+}
+
+.custom-select.is-open .custom-select-face {
+  border-color: rgb(5 150 105 / 0.58);
+  box-shadow: 0 0 0 3px rgb(5 150 105 / 0.10), 0 8px 22px rgb(15 23 42 / 0.07);
+}
+
+.custom-select-value,
+.custom-select-placeholder {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.custom-select-value {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.custom-select-placeholder {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.custom-select-chevron {
+  flex: 0 0 auto;
+  color: #64748b;
+  transition: transform 160ms ease, color 160ms ease;
+}
+
+.custom-select.is-open .custom-select-chevron {
+  color: #059669;
+}
+
+.custom-select.is-disabled .custom-select-face {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+html.dark .custom-select-face {
+  background: linear-gradient(135deg, rgb(5 42 31 / 0.90), rgb(2 24 18 / 0.94));
+  border-color: rgb(52 211 153 / 0.22);
+  color: #ecfdf5;
+  box-shadow: inset 0 1px 0 rgb(110 231 183 / 0.035), 0 6px 18px rgb(0 0 0 / 0.12);
+}
+
+html.dark .custom-select-face:hover {
+  border-color: rgb(52 211 153 / 0.38);
+  background: linear-gradient(135deg, rgb(5 50 37 / 0.96), rgb(2 30 22 / 0.97));
+}
+
+html.dark .custom-select-value {
+  color: #ecfdf5;
+}
+
+html.dark .custom-select-placeholder,
+html.dark .custom-select-chevron {
+  color: #9ac6b6;
+}
+
+html.dark .custom-select.is-open .custom-select-face {
+  border-color: rgb(52 211 153 / 0.62);
+  box-shadow: 0 0 0 3px rgb(52 211 153 / 0.13), 0 10px 26px rgb(0 0 0 / 0.20);
+}
+
+.custom-select-menu {
+  max-height: min(20rem, calc(100dvh - 8rem));
+}
+
+/* Add Trade primary action: always readable in both themes. */
+.trade-submit-button {
+  border: 1px solid rgb(4 120 87 / 0.85);
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgb(5 150 105 / 0.18);
+}
+
+.trade-submit-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #34d399, #10b981);
+}
+
+html.dark .trade-submit-button {
+  border-color: rgb(110 231 183 / 0.45);
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  box-shadow: 0 10px 26px rgb(0 0 0 / 0.28);
+}
+
+html.dark .trade-submit-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #34d399, #10b981);
+}
+
+
+html.dark .custom-select-menu {
+  border: 1px solid rgb(52 211 153 / 0.30);
+  background: linear-gradient(145deg, rgb(4 39 29 / 0.995), rgb(2 25 19 / 0.995));
+  color: #ecfdf5;
+  box-shadow: 0 18px 45px rgb(0 0 0 / 0.38);
+}
+
+html:not(.dark) .custom-select-menu {
+  border: 1px solid rgb(6 78 59 / 0.14);
+  background: rgb(255 255 255 / 0.99);
+  box-shadow: 0 18px 45px rgb(15 23 42 / 0.14);
+}
+
+/* Any open selector in Add Trade must paint above the following card. */
+.trade-form {
+  position: relative;
+  isolation: isolate;
+}
+
+.trade-form > .ui-section {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+.trade-form > .ui-section:has(.custom-select.is-open),
+.trade-form > .ui-section:has(.instrument-picker-open) {
+  z-index: 140;
+  overflow: visible;
+}
+
+.trade-form > .ui-section:has(.custom-select.is-open) .custom-select-menu,
+.trade-form > .ui-section:has(.instrument-picker-open) .select-menu {
+  z-index: 150;
+}
+
+/* Profile/settings popovers use the same green surface as select menus. */
+.theme-popover {
+  border: 1px solid rgb(6 78 59 / 0.12);
+  background: rgb(255 255 255 / 0.94);
+  color: #0f172a;
+  box-shadow: 0 22px 55px rgb(15 23 42 / 0.15);
+  backdrop-filter: blur(20px);
+}
+
+.theme-popover-divider {
+  background: rgb(15 118 110 / 0.10);
+}
+
+.theme-popover-item {
+  color: #334155;
+}
+
+.theme-popover-item:hover {
+  background: rgb(236 253 245 / 0.9);
+  color: #064e3b;
+}
+
+html.dark .theme-popover {
+  border-color: rgb(52 211 153 / 0.16);
+  background: rgb(4 39 29 / 0.97);
+  color: #ecfdf5;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.34);
+}
+
+html.dark .theme-popover-divider {
+  background: rgb(52 211 153 / 0.12);
+}
+
+html.dark .theme-popover-item {
+  color: #d1fae5;
+}
+
+html.dark .theme-popover-item:hover {
+  background: rgb(6 95 70 / 0.52);
+  color: #ecfdf5;
+}
+
+/* A dropdown opened in the first Add Trade card must sit above the next
+   Price & Result card instead of being clipped or painted underneath it. */
+.trade-form {
+  position: relative;
+  isolation: isolate;
+}
+
+.trade-form > .ui-section {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+.trade-form > .ui-section:has(.instrument-picker-open) {
+  z-index: 60;
+}
+
+.trade-form > .ui-section:has(.instrument-picker-open) .instrument-picker-open {
+  z-index: 70;
+}
+
+.trade-form > .ui-section:has(.instrument-picker-open) .select-menu {
+  z-index: 80;
+}
+
+@media (max-width: 640px) {
+  .custom-select-face,
+  .custom-select {
+    min-height: 44px;
+  }
+
+  .trade-form > .ui-section:has(.instrument-picker-open) .select-menu {
+    max-height: min(24rem, calc(100dvh - 7rem));
+  }
+}
+
+
+/* Analytics performance tables: stable sticky headers without text collisions. */
+.performance-table-scroll {
+  position: relative;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  isolation: isolate;
+}
+
+.performance-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.performance-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  white-space: nowrap;
+  background: #f8fafc;
+  background-clip: padding-box;
+  box-shadow: inset 0 -1px 0 rgb(226 232 240);
+}
+
+.performance-table tbody td {
+  vertical-align: middle;
+  background-clip: padding-box;
+}
+
+.performance-table tbody tr {
+  height: 52px;
+}
+
+html.dark .performance-table thead th {
+  background: #0b2119;
+  color: rgb(148 163 184);
+  box-shadow: inset 0 -1px 0 rgb(51 65 85 / 0.8);
+}
+
+html.dark .performance-table tbody td {
+  color: rgb(203 213 225);
+}
+
+@media (max-width: 640px) {
+  .performance-table-scroll {
+    max-height: 320px;
+  }
+
+  .performance-table {
+    min-width: 680px;
+  }
+}
+
+
+
+/* Final mobile auth positioning: keep Login/Register centered vertically. */
+@media (max-width: 640px) {
+  .auth-shell {
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100dvh !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .auth-flip-container {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
