@@ -12,8 +12,7 @@ import {
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { createSupabaseApi } from "../lib/supabaseApi";
-import { supabase } from "../lib/supabaseClient";
+import { pipeApi } from "../lib/pipeApi";
 import { useAuth } from "../hooks/useAuth";
 import { useJournalData } from "../hooks/useJournalData";
 import { useLanguage } from "../hooks/useLanguage";
@@ -22,19 +21,6 @@ import PeriodFilter from "./PeriodFilter";
 import Select from "./Select";
 import { filterTradesByPeriod, getPeriodRange } from "./periodFilterUtils";
 import { formatRiskReward, getRiskReward } from "../utils/riskReward";
-
-
-async function getSupabaseDataApi() {
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError) throw authError;
-  if (!user) throw new Error("You must be logged in.");
-
-  return createSupabaseApi(user.id);
-}
 
 const PSYCHOLOGY_VALUES = ["GREED", "FEAR", "NEUTRAL"];
 const RESULT_VALUES = ["WIN", "LOSS", "BREAKEVEN"];
@@ -957,8 +943,7 @@ function DataManagement() {
     try {
       const importedAccounts = importPreview.accounts || [];
       const importedTrades = importPreview.trades || [];
-      const dataApi = await getSupabaseDataApi();
-      const existingAccounts = await dataApi.accounts.list();
+      const existingAccounts = await pipeApi.accounts.list();
       const accountIdMap = new Map();
       for (const account of importedAccounts) {
         const name = String(account.account_name || "").trim();
@@ -968,12 +953,12 @@ function DataManagement() {
         if (!currency) continue;
         const existing = existingAccounts.find((item) => item.name === name);
         if (existing) { if (account.account_id) accountIdMap.set(String(account.account_id), existing.id); continue; }
-        const created = await dataApi.accounts.create({ name, accountType: type, currency, startingBalance: number(account.initial_balance), pair: account.primary_pair ? String(account.primary_pair).trim().toUpperCase() : null });
+        const created = await pipeApi.accounts.create({ name, accountType: type, currency, startingBalance: number(account.initial_balance), pair: account.primary_pair ? String(account.primary_pair).trim().toUpperCase() : null });
         if (account.account_id) accountIdMap.set(String(account.account_id), created.id);
       }
-      const allAccounts = await dataApi.accounts.list();
+      const allAccounts = await pipeApi.accounts.list();
       allAccounts.forEach((account) => accountIdMap.set(String(account.id), account.id));
-      const existingResponse = await dataApi.trades.list(new URLSearchParams({ page: "1", limit: "1000" }).toString());
+      const existingResponse = await pipeApi.trades.list(new URLSearchParams({ page: "1", limit: "1000" }).toString());
       const existingTrades = existingResponse.data || [];
       const duplicates = new Set(existingTrades.map((trade) => [trade.account_id, trade.trade_date, trade.pair, trade.direction, number(trade.entry_price), number(trade.pnl)].join("|")));
       let importedCount = 0;
@@ -988,7 +973,7 @@ function DataManagement() {
         const rr = Number(imported.risk_reward);
         const result = RESULT_VALUES.includes(String(imported.result || "").toUpperCase()) ? String(imported.result).toUpperCase() : "BREAKEVEN";
         const pnl = number(imported.pnl);
-        await dataApi.trades.create({ accountId: mappedAccountId, tradeDate: imported.trade_date, pair, direction: String(imported.direction || "BUY").toUpperCase(), entryPrice: number(imported.entry_price), stopLoss: imported.stop_loss === "" ? null : number(imported.stop_loss), takeProfit: imported.take_profit === "" ? null : number(imported.take_profit), lotSize: number(imported.lot_size) || 0.01, riskReward: Number.isFinite(rr) && rr > 0 ? rr : null, result, pnl, strategy: String(imported.strategy || "").trim() || null, session: String(imported.session || "").trim() || null, psychology, notes: String(imported.notes || "").trim() || null });
+        await pipeApi.trades.create({ accountId: mappedAccountId, tradeDate: imported.trade_date, pair, direction: String(imported.direction || "BUY").toUpperCase(), entryPrice: number(imported.entry_price), stopLoss: imported.stop_loss === "" ? null : number(imported.stop_loss), takeProfit: imported.take_profit === "" ? null : number(imported.take_profit), lotSize: number(imported.lot_size) || 0.01, riskReward: Number.isFinite(rr) && rr > 0 ? rr : null, result, pnl, strategy: String(imported.strategy || "").trim() || null, session: String(imported.session || "").trim() || null, psychology, notes: String(imported.notes || "").trim() || null });
         duplicates.add(duplicateKey); importedCount += 1;
       }
       await refresh(); setMessage(t("excelImportComplete").replace("{count}", importedCount)); resetImport();

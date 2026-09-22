@@ -8,6 +8,7 @@ import {
   X,
   RotateCcw,
 } from "lucide-react";
+import { pipeApi } from "../../lib/pipeApi";
 import { useAuth } from "../../hooks/useAuth";
 import { useProfile } from "../../hooks/useProfile";
 import { useLanguage } from "../../hooks/useLanguage";
@@ -43,7 +44,7 @@ function applyTheme(theme) {
 
 function ProfileSettings() {
   const { user } = useAuth();
-  const { profile, updateProfile } = useProfile();
+  const { updateProfile } = useProfile();
   const { t } = useLanguage();
 
   const fileInputRef = useRef(null);
@@ -95,35 +96,44 @@ function ProfileSettings() {
     async function loadProfile() {
       setProfileError("");
 
+      let data;
       try {
-        const nextSettings = {
-          traderName:
-            profile?.traderName ||
-            user.email?.split("@")[0] ||
-            "Trader",
-
-          journalName: profile?.journalName || "PIPE.ID",
-
-          theme: profile?.theme || "light",
-
-          avatarUrl: profile?.avatarUrl || "",
-        };
-
-        setSettings(nextSettings);
-
-        localStorage.setItem(
-          "trading_journal_theme",
-          nextSettings.theme,
-        );
-
-        applyTheme(nextSettings.theme);
+        data = await pipeApi.profile.get();
       } catch (error) {
         setProfileError(error.message);
+        return;
       }
+
+      const nextSettings = {
+        traderName:
+          data?.trader_name ||
+          user.email?.split("@")[0] ||
+          "Trader",
+
+        journalName:
+          data?.journal_name === "Pipfolio" ||
+          data?.journal_name === "Trading Journal"
+            ? "PIPE.ID"
+            : data?.journal_name || "PIPE.ID",
+
+        theme: data?.theme || "light",
+
+        avatarUrl: data?.avatar_url || "",
+      };
+
+      setSettings(nextSettings);
+
+      localStorage.setItem(
+        "trading_journal_theme",
+        nextSettings.theme,
+      );
+
+      applyTheme(nextSettings.theme);
+
     }
 
     loadProfile();
-  }, [user, profile]);
+  }, [user]);
 
   useEffect(() => {
     return () => {
@@ -332,8 +342,8 @@ function ProfileSettings() {
         reader.readAsDataURL(file);
       });
       if (!dataUrl) throw new Error("Profile image could not be prepared.");
-      await updateProfile({ avatarUrl: dataUrl });
-      const avatarUrl = dataUrl;
+      const data = await pipeApi.profile.update({ avatarUrl: dataUrl });
+      const avatarUrl = data?.avatar_url || dataUrl;
       setSettings((current) => ({ ...current, avatarUrl }));
       window.dispatchEvent(new CustomEvent("profilechange", { detail: { traderName: settings.traderName, journalName: settings.journalName, avatarUrl } }));
       setProfileMessage("Profile photo updated successfully.");

@@ -1,15 +1,4 @@
-import { supabase } from "./supabaseClient";
-
-export async function fetchInstruments() {
-  const { data, error } = await supabase
-    .from("instrument_catalog")
-    .select("*")
-    .eq("active", true)
-    .order("asset_type", { ascending: true })
-    .order("symbol", { ascending: true });
-
-  if (error) throw error;
-  return data || [];
-}
+import { pipeApi } from "./pipeApi";
+export async function fetchInstruments() { return pipeApi.instruments(); }
 export const ASSET_TYPE_ORDER = ["forex", "crypto", "commodities", "indices", "stocks", "futures", "other"];
 export function sortInstruments(items) { return [...items].sort((a, b) => { const typeA = ASSET_TYPE_ORDER.indexOf(a.asset_type); const typeB = ASSET_TYPE_ORDER.indexOf(b.asset_type); const rankA = typeA === -1 ? 999 : typeA; const rankB = typeB === -1 ? 999 : typeB; if (rankA !== rankB) return rankA - rankB; return String(a.symbol).localeCompare(String(b.symbol)); }); }

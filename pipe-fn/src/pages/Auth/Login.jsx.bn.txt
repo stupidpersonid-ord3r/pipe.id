@@ -9,7 +9,7 @@ import {
   Moon,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { supabase } from "../../lib/supabaseClient";
+import { pipeApi } from "../../lib/pipeApi";
 import { useLanguage } from "../../hooks/useLanguage";
 import { assessPassword } from "../../utils/passwordPolicy";
 
@@ -82,11 +82,7 @@ function Login() {
     setLoginLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: loginForm.email.trim(),
-        password: loginForm.password,
-      });
-      if (error) throw error;
+      await pipeApi.login({ email: loginForm.email.trim(), password: loginForm.password });
       navigate("/dashboard", { replace: true });
     } catch (error) {
       setLoginError(error.message);
@@ -139,18 +135,7 @@ function Login() {
     setRegisterLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: registerForm.email.trim(),
-        password: registerForm.password,
-      });
-      if (error) throw error;
-      if (!data?.session) {
-        setRegisterSuccess(
-          "Registration successful. Check your email to confirm your account."
-        );
-        setRegisterLoading(false);
-        return;
-      }
+      await pipeApi.register({ email: registerForm.email.trim(), password: registerForm.password });
       navigate("/dashboard", { replace: true });
     } catch (error) {
       setRegisterError(error.message);

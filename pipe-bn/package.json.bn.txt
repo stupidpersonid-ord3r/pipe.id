@@ -10,8 +10,7 @@
     "start": "node dist/server.js",
     "check": "tsc --noEmit -p tsconfig.json",
     "db:migrate": "tsx scripts/db-migrate.ts",
-    "db:check": "tsx scripts/db-check.ts",
-    "db:reset-data": "tsx scripts/db-reset-data.ts"
+    "db:check": "tsx scripts/db-check.ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.0.0",

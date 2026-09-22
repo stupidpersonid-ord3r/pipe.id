@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, ArrowDownRight } from "lucide-react";
-import { supabase } from "../../lib/supabaseClient";
+import { pipeApi } from "../../lib/pipeApi";
 import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../hooks/useLanguage";
 import { formatRiskReward, getRiskReward } from "../../utils/riskReward";
@@ -71,29 +71,9 @@ function TradeDetail() {
       setError("");
 
       try {
-        const { data, error: queryError } = await supabase
-          .from("trades")
-          .select(`
-            *,
-            accounts (
-              name,
-              currency,
-              account_type
-            )
-          `)
-          .eq("id", id)
-          .maybeSingle();
-
-        if (queryError) throw queryError;
-
-        const normalizedData = data
-          ? {
-              ...data,
-              account_name: data.accounts?.name ?? "Unknown Account",
-            }
-          : null;
+        const data = await pipeApi.trades.get(id);
         if (!active) return;
-        setTrade(normalizedData ? normalizeTrade(normalizedData) : null);
+        setTrade(data ? normalizeTrade(data) : null);
       } catch (queryError) {
         if (!active) return;
         setError(queryError.message);

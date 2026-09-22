@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { pipeApi, clearPipeSession } from "../lib/pipeApi";
+import { supabase } from "../lib/supabaseClient";
 import { AuthContext } from "./AuthContextValue";
 
 export function AuthProvider({ children }) {
@@ -8,32 +8,75 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let active = true;
-    async function load() {
-      try {
-        if (!localStorage.getItem("pipe_access_token")) { if (active) setLoading(false); return; }
-        const data = await pipeApi.status();
-        if (active) setUser(data.user || null);
-      } catch {
-        clearPipeSession();
-        if (active) setUser(null);
-      } finally { if (active) setLoading(false); }
+
+    async function loadSession() {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+
+      if (!active) return;
+
+      if (error) {
+        console.error("Supabase session error:", error);
+        setUser(null);
+      } else {
+        setUser(session?.user ?? null);
+      }
+
+      setLoading(false);
     }
-    load();
-    const handleSessionChange = () => load();
-    window.addEventListener("pipe-session-change", handleSessionChange);
-    return () => { active = false; window.removeEventListener("pipe-session-change", handleSessionChange); };
+
+    loadSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!active) return;
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   async function logout() {
-    await pipeApi.logout();
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      throw error;
+    }
+
     setUser(null);
   }
 
   async function refreshUser() {
-    const data = await pipeApi.status();
-    setUser(data.user || null);
-    return data.user;
+    const {
+      data: { user: currentUser },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error) {
+      throw error;
+    }
+
+    setUser(currentUser ?? null);
+    return currentUser ?? null;
   }
 
-  return <AuthContext.Provider value={{ user, loading, logout, refreshUser }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        logout,
+        refreshUser,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }

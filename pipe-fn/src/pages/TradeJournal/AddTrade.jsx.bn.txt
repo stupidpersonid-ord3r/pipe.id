@@ -1,26 +1,13 @@
 import { useMemo, useState } from "react";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../lib/supabaseClient";
+import { pipeApi } from "../../lib/pipeApi";
 import { useAuth } from "../../hooks/useAuth";
 import { useJournalData } from "../../hooks/useJournalData";
 import { useLanguage } from "../../hooks/useLanguage";
 import InstrumentPicker from "../../components/InstrumentPicker";
 import Select from "../../components/Select";
 import { calculateRiskReward, formatRiskReward } from "../../utils/riskReward";
-
-
-async function getPipeUserId() {
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError) throw authError;
-  if (!user) throw new Error("You must be logged in.");
-
-  return user.id;
-}
 
 const initialForm = {
   tradeDate: new Date().toISOString().slice(0, 10),
@@ -188,30 +175,23 @@ function AddTrade() {
     setError("");
 
     try {
-      const pipeUserId = await getPipeUserId();
-
-      const { error: insertError } = await supabase
-        .from("trades")
-        .insert({
-          user_id: pipeUserId,
-          account_id: submitForm.accountId,
-          trade_date: submitForm.tradeDate,
-          pair: submitForm.pair.trim().toUpperCase(),
-          direction: submitForm.direction,
-          entry_price: Number(submitForm.entryPrice),
-          stop_loss: Number(submitForm.stopLoss),
-          take_profit: Number(submitForm.takeProfit),
-          lot_size: Number(submitForm.lotSize),
-          result: submitForm.result,
-          pnl: Number(submitForm.pnl),
-          strategy: submitForm.strategy.trim() || null,
-          session: submitForm.session,
-          psychology: submitForm.psychology,
-          notes: submitForm.notes.trim() || null,
-          risk_reward: rr,
-        });
-
-      if (insertError) throw insertError;
+      await pipeApi.trades.create({
+        accountId: submitForm.accountId,
+        tradeDate: submitForm.tradeDate,
+        pair: submitForm.pair.trim().toUpperCase(),
+        direction: submitForm.direction,
+        entryPrice: Number(submitForm.entryPrice),
+        stopLoss: Number(submitForm.stopLoss),
+        takeProfit: Number(submitForm.takeProfit),
+        lotSize: Number(submitForm.lotSize),
+        result: submitForm.result,
+        pnl: Number(submitForm.pnl),
+        strategy: submitForm.strategy.trim(),
+        session: submitForm.session,
+        psychology: submitForm.psychology,
+        notes: submitForm.notes.trim() || null,
+        riskReward: rr,
+      });
       navigate("/trades");
     } catch (error) {
       setError(error.message);

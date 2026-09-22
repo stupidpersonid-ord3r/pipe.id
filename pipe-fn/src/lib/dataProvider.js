@@ -1,16 +1,14 @@
-import { pipeApi } from "./pipeApi";
 import { createSupabaseApi } from "./supabaseApi";
+import { supabase } from "./supabaseClient";
 
-export function getDataProvider(user) {
-  const provider = import.meta.env.VITE_DATA_PROVIDER || "bn";
+export async function getDataProvider() {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-  if (provider === "supabase") {
-    if (!user?.id) {
-      throw new Error("A valid PIPE.ID user is required.");
-    }
+  if (authError) throw authError;
+  if (!user) throw new Error("A valid Supabase user is required.");
 
-    return createSupabaseApi(user.id);
-  }
-
-  return pipeApi;
+  return createSupabaseApi(user.id);
 }

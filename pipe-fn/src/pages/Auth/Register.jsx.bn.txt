@@ -4,7 +4,7 @@ import { Eye, EyeOff, LockKeyhole, Mail, TrendingUp, Sun, Moon } from "lucide-re
 
 import { Link, useNavigate } from "react-router-dom";
 
-import { supabase } from "../../lib/supabaseClient";
+import { pipeApi } from "../../lib/pipeApi";
 
 import { useLanguage } from "../../hooks/useLanguage";
 
@@ -83,17 +83,7 @@ function Register() {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: form.email.trim(),
-        password: form.password,
-      });
-      if (error) throw error;
-      if (!data?.session) {
-        setError("");
-        setLoading(false);
-        navigate("/login", { replace: true });
-        return;
-      }
+      await pipeApi.register({ email: form.email.trim(), password: form.password });
       navigate("/dashboard", { replace: true });
     } catch (error) {
       setError(error.message);

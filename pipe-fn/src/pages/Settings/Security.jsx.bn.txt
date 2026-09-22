@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { AtSign, KeyRound, Mail, Phone, ShieldCheck } from "lucide-react";
-import { supabase } from "../../lib/supabaseClient";
-import { useProfile } from "../../hooks/useProfile";
+import { pipeApi } from "../../lib/pipeApi";
 import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../hooks/useLanguage";
 import { assessPassword } from "../../utils/passwordPolicy";
@@ -47,7 +46,6 @@ function parseStoredPhone(value) {
 
 export default function Security() {
   const { user } = useAuth();
-  const { profile, updateProfile } = useProfile();
   const { t } = useLanguage();
 
   const [backupEmail, setBackupEmail] = useState("");
@@ -75,8 +73,9 @@ export default function Security() {
 
     async function loadSecurity() {
       try {
-        setBackupEmail(profile?.backupEmail || "");
-        const parsed = parseStoredPhone(profile?.phoneWhatsapp || "");
+        const data = await pipeApi.profile.get();
+        setBackupEmail(data?.backup_email || "");
+        const parsed = parseStoredPhone(data?.phone_whatsapp || "");
         setPhoneCountry(parsed.country);
         setPhoneNumber(parsed.number);
       } catch (loadError) {
@@ -85,7 +84,7 @@ export default function Security() {
     }
 
     loadSecurity();
-  }, [user, profile]);
+  }, [user]);
 
   async function saveContacts(event) {
     event.preventDefault();
@@ -120,7 +119,7 @@ export default function Security() {
     const storedPhone = number && country ? `${country.dial}${number}` : null;
 
     try {
-      await updateProfile({ backupEmail: email || null, phoneWhatsapp: storedPhone });
+      await pipeApi.profile.update({ backupEmail: email || null, phoneWhatsapp: storedPhone });
       setMessage("Security contact information saved successfully.");
     } catch (updateError) {
       setError(updateError.message);
@@ -161,14 +160,7 @@ export default function Security() {
     setEmailSaving(true);
 
     try {
-      const { error: verifyError } = await supabase.auth.signInWithPassword({
-        email: user?.email,
-        password,
-      });
-      if (verifyError) throw verifyError;
-
-      const { error } = await supabase.auth.updateUser({ email });
-      if (error) throw error;
+      await pipeApi.changeEmail({ email, password });
       setNewEmail("");
       setEmailCurrentPassword("");
       setMessage("Email changed successfully.");
@@ -218,16 +210,7 @@ export default function Security() {
     setChangingPassword(true);
 
     try {
-      const { error: verifyError } = await supabase.auth.signInWithPassword({
-        email: user?.email,
-        password: currentPassword,
-      });
-      if (verifyError) throw verifyError;
-
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword,
-      });
-      if (error) throw error;
+      await pipeApi.changePassword({ currentPassword, newPassword });
       setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
       setPasswordMessage(t("passwordChangedSuccessfully"));
     } catch (err) {
