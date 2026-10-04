@@ -122,7 +122,7 @@ function AllTrades() {
               <table className="w-full min-w-[1120px] text-left">
                 <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50">
                   <tr>
-                    {[t("legacyDate"), t("account"), t("pair"), t("direction"), t("result"), t("psychology"), t("riskReward"), t("pnl"), t("strategy"), t("Detail")].map((label) => (
+                    {[t("legacyDate"), t("account"), t("pair"), t("direction"), t("result"), t("psychology"), t("riskReward"), t("pnl"), t("strategy"), t("detail")].map((label) => (
                       <th
                         key={label}
                         className={`px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-500 ${label === "View" ? "text-right" : ""}`}
