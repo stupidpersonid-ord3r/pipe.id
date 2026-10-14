@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import Select from "./Select";
+import { useLanguage } from "../hooks/useLanguage";
 
 const CURRENCY_CATALOG = [
   { value: "AUD", label: "AUD — Australian Dollar" },
@@ -30,25 +31,65 @@ const CURRENCY_CATALOG = [
   { value: "ZAR", label: "ZAR — South African Rand" },
 ];
 
+const CURRENCY_NAME_KEYS = {
+  USD: "currencyUSD",
+  DKK: "currencyDKK",
+  NOK: "currencyNOK",
+  SEK: "currencySEK",
+  IDR: "currencyIDR",
+  SGD: "currencySGD",
+  MYR: "currencyMYR",
+  JPY: "currencyJPY",
+  KRW: "currencyKRW",
+  INR: "currencyINR",
+  AED: "currencyAED",
+  AUD: "currencyAUD",
+  NZD: "currencyNZD",
+  GBP: "currencyGBP",
+  EUR: "currencyEUR",
+  CAD: "currencyCAD",
+  CHF: "currencyCHF",
+  CNY: "currencyCNY",
+  HKD: "currencyHKD",
+  THB: "currencyTHB",
+  PHP: "currencyPHP",
+  VND: "currencyVND",
+  BRL: "currencyBRL",
+  MXN: "currencyMXN",
+  ZAR: "currencyZAR",
+  TRY: "currencyTRY",
+  RUB: "currencyRUB",
+  PLN: "currencyPLN",
+};
+
 export default function CurrencyCatalogSelect({
   value,
   onChange,
   required = false,
 }) {
-  const currencies = useMemo(() => CURRENCY_CATALOG, []);
+  const { t } = useLanguage();
+
+  const currencies = useMemo(
+    () => CURRENCY_CATALOG.map((currency) => {
+      const nameKey = CURRENCY_NAME_KEYS[currency.value];
+      const translatedName = nameKey ? t(nameKey) : currency.label.split(" — ").slice(1).join(" — ");
+      return { ...currency, label: `${currency.value} — ${translatedName}` };
+    }),
+    [t],
+  );
 
   return (
     <div>
       <Select
         value={value}
         onChange={onChange}
-        placeholder="Select currency"
+        placeholder={t("selectCurrency")}
         required={required}
         options={currencies}
       />
 
       <p className="mt-1.5 text-[11px] text-slate-400">
-        Account currency
+        {t("accountCurrency")}
       </p>
     </div>
   );

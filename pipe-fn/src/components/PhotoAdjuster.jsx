@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, RotateCw, X } from "lucide-react";
+import { useLanguage } from "../hooks/useLanguage";
 
 const OUTPUT_SIZE = 512;
 
@@ -13,6 +14,7 @@ export default function PhotoAdjuster({
   onCancel,
   onUse,
 }) {
+  const { t } = useLanguage();
   const imageRef = useRef(null);
   const dragRef = useRef(null);
 
@@ -290,11 +292,11 @@ export default function PhotoAdjuster({
         <div className="flex shrink-0 items-center justify-between border-b border-white/10 bg-slate-950 px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] sm:px-6 sm:pt-4">
           <div>
             <h2 className="text-base font-semibold text-white">
-              Adjust Photo
+              {t("adjustPhoto")}
             </h2>
 
             <p className="mt-0.5 text-xs text-slate-400">
-              Crop dan atur foto profil kamu
+              {t("adjustPhotoDescription")}
             </p>
           </div>
 
@@ -303,7 +305,7 @@ export default function PhotoAdjuster({
             onClick={onCancel}
             disabled={busy}
             className="flex h-10 w-10 items-center justify-center rounded-full text-slate-300 transition hover:bg-white/10 hover:text-white disabled:opacity-50"
-            aria-label="Cancel"
+            aria-label={t("cancelAction")}
           >
             <X size={20} />
           </button>
@@ -325,11 +327,11 @@ export default function PhotoAdjuster({
               <img
                 ref={imageRef}
                 src={source}
-                alt="Adjust profile photo"
+                alt={t("adjustPhoto")}
                 draggable="false"
                 onError={() =>
                   setImageError(
-                    "Foto tidak dapat dibaca. Gunakan JPG atau PNG.",
+                    t("imageReadFailed"),
                   )
                 }
                 className="absolute left-1/2 top-1/2 max-w-none select-none"
@@ -354,7 +356,7 @@ export default function PhotoAdjuster({
 
               {/* Instruction */}
               <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-black/60 px-3 py-1.5 text-[11px] font-medium text-white backdrop-blur-sm">
-                Geser foto untuk crop
+                {t("photoDragHint")}
               </div>
 
               {imageError && (
@@ -372,7 +374,7 @@ export default function PhotoAdjuster({
           <div className="mx-auto w-full max-w-[520px]">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-xs font-medium text-slate-400">
-                Zoom
+                {t("zoom")}
               </span>
 
               <span className="text-xs font-semibold text-white">
@@ -392,7 +394,7 @@ export default function PhotoAdjuster({
                 )
               }
               className="h-2 w-full cursor-pointer accent-emerald-500"
-              aria-label="Zoom photo"
+              aria-label={t("zoomPhoto")}
             />
           </div>
 
@@ -405,7 +407,7 @@ export default function PhotoAdjuster({
               disabled={busy}
               className="min-w-[88px] rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10 disabled:opacity-50"
             >
-              Cancel
+              {t("cancelAction")}
             </button>
 
             {/* Rotate */}
@@ -416,7 +418,7 @@ export default function PhotoAdjuster({
               className="inline-flex min-w-[100px] items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10 disabled:opacity-50"
             >
               <RotateCw size={16} />
-              Rotate
+              {t("rotate")}
             </button>
 
             {/* Upload */}
@@ -432,8 +434,8 @@ export default function PhotoAdjuster({
               <Check size={16} />
 
               {busy
-                ? "Uploading..."
-                : "Upload"}
+                ? t("uploadingAction")
+                : t("uploadAction")}
             </button>
           </div>
         </div>

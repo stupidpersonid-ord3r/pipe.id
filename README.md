@@ -75,3 +75,12 @@ npm run build
 Do not commit `.env`. The repository only contains `.env.example`.
 
 The old Supabase frontend client and legacy Supabase SQL folder were removed from this package. The existing Supabase project should remain untouched until its data has been migrated and verified in the new PostgreSQL database.
+
+
+## Catatan perbaikan terbaru
+
+- Query profil memakai `maybeSingle()` saat membaca profil agar pengguna yang belum memiliki baris profil tidak langsung dianggap gagal.
+- Penyimpanan profil memakai `upsert` dengan konflik pada `id`, sehingga profil baru dibuat bila belum ada dan diperbarui bila sudah ada. Ini menangani respons PostgREST `406` yang terjadi ketika `.single()` menerima nol baris.
+- Aplikasi tetap menyimpan avatar melalui alur profil Supabase yang sudah ada; bucket Storage baru tidak diwajibkan oleh perubahan ini.
+
+Verifikasi di lingkungan pengemasan: lint/build belum dapat dinyatakan lulus karena instalasi dependensi npm tidak selesai dan executable ESLint/Vite tidak tersedia. Jalankan `npm ci`, lalu `npm run lint` dan `npm run build` di lingkungan Node.js versi yang didukung proyek (Node 24+).

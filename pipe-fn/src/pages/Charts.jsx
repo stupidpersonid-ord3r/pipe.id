@@ -221,11 +221,11 @@ function Charts() {
           </div>
 
           <h2 className="mt-5 text-base font-semibold text-slate-900 dark:text-slate-100">
-            No chart data available
+            {t("noChartDataAvailable")}
           </h2>
 
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Add some trades first to see your charts.
+            {t("addTradesFirstCharts")}
           </p>
         </div>
       </div>
@@ -428,6 +428,7 @@ function ChartSection({
 }
 
 function EquityChart({ data }) {
+  const { t } = useLanguage();
   const [activeIndex, setActiveIndex] =
     useState(data.length - 1);
 
@@ -594,7 +595,7 @@ function EquityChart({ data }) {
             );
           }}
           role="img"
-          aria-label="Equity curve"
+          aria-label={t("equityCurve")}
         >
           <defs>
             <linearGradient
@@ -812,6 +813,7 @@ function EquityChart({ data }) {
 }
 
 function DailyPnlChart({ data }) {
+  const { t } = useLanguage();
   const [activeIndex, setActiveIndex] =
     useState(null);
 
@@ -839,11 +841,11 @@ function DailyPnlChart({ data }) {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-xs font-medium text-slate-400">
-            P&L
+            {t("pnl")}
           </p>
 
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            {data.length} trading days
+            {t("tradingDays").replace("{count}", String(data.length))}
           </p>
         </div>
 
@@ -974,12 +976,12 @@ function DailyPnlChart({ data }) {
       <div className="mt-3 flex items-center justify-center gap-5 text-[10px] font-medium text-slate-400">
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-emerald-400" />
-          Profit
+          {t("profit")}
         </span>
 
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-red-400" />
-          Loss
+          {t("loss")}
         </span>
       </div>
     </div>
@@ -987,6 +989,7 @@ function DailyPnlChart({ data }) {
 }
 
 function PairChart({ data }) {
+  const { t } = useLanguage();
   const [active, setActive] =
     useState(null);
 
@@ -1088,7 +1091,7 @@ function PairChart({ data }) {
                 {percentage.toFixed(
                   1
                 )}
-                % of largest pair P&L
+                {t("largestPairPnl").replace("{percentage}", percentage.toFixed(1))}
               </p>
             ) : null}
           </button>
@@ -1099,10 +1102,11 @@ function PairChart({ data }) {
 }
 
 function EmptyChart() {
+  const { t } = useLanguage();
   return (
     <div className="flex min-h-[180px] items-center justify-center rounded-2xl bg-slate-50 dark:bg-slate-950/40">
       <p className="text-sm text-slate-400">
-        No data available for this period.
+        {t("noDataAvailablePeriod")}
       </p>
     </div>
   );

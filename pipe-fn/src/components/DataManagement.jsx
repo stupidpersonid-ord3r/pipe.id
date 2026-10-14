@@ -623,7 +623,7 @@ function DataManagement() {
 
     try {
       const context = exportContext();
-      if (!context.trades.length) throw new Error("There are no trades in the selected filter.");
+      if (!context.trades.length) throw new Error(t("noTradesInSelectedFilter"));
 
       const colors = setPdfTheme();
       const sorted = [...context.trades].sort((a, b) => String(tradeDate(a)).localeCompare(String(tradeDate(b))));
@@ -679,7 +679,9 @@ function DataManagement() {
       function addChartPage(title, image, subtitle) {
         doc.addPage();
         paintPage();
-        header(title, subtitle);
+        // The chart image already contains its own title and subtitle.
+        // Keep a generic report header here to avoid rendering the chart title twice.
+        header("Trading Journal Report", context.filterLabel);
         if (image) doc.addImage(image, "PNG", margin, 30, pageWidth - margin * 2, 155);
       }
 
@@ -903,9 +905,13 @@ function DataManagement() {
           fontSize: 5.8,
         },
         alternateRowStyles: { fillColor: colors.surface === "#ffffff" ? [248, 250, 252] : [17, 24, 39] },
-        willDrawPage: () => {
-          paintPage();
-          header(t("tradeLog"), t("completeExportedTrades"));
+        willDrawPage: (data) => {
+          // The first page already has its header above autoTable().
+          // Only paint and add the header on subsequent table pages.
+          if (data.pageNumber > 1) {
+            paintPage();
+            header(t("tradeLog"), t("completeExportedTrades"));
+          }
         },
       });
 
@@ -935,7 +941,7 @@ function DataManagement() {
       const workbook = XLSX.read(await file.arrayBuffer(), { type: "array" });
       const tradesSheet = workbook.Sheets.Trades;
       const accountsSheet = workbook.Sheets.Accounts;
-      if (!tradesSheet && !accountsSheet) throw new Error("The Excel file must contain a Trades or Accounts sheet.");
+      if (!tradesSheet && !accountsSheet) throw new Error(t("invalidExcelStructure"));
 
       setImportPreview({
         fileName: file.name,
@@ -945,7 +951,7 @@ function DataManagement() {
       setShowImportModal(true);
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to read the Excel file.");
+      setError(err.message || t("excelReadFailed"));
     } finally {
       setImporting(false);
     }
@@ -992,7 +998,7 @@ function DataManagement() {
         duplicates.add(duplicateKey); importedCount += 1;
       }
       await refresh(); setMessage(t("excelImportComplete").replace("{count}", importedCount)); resetImport();
-    } catch (err) { console.error(err); setError(err.message || "Failed to import Excel data."); }
+    } catch (err) { console.error(err); setError(err.message || t("excelImportFailed")); }
     finally { setImporting(false); }
   }
 

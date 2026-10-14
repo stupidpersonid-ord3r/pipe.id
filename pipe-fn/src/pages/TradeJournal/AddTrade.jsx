@@ -31,7 +31,6 @@ const initialForm = {
   entryPrice: "",
   stopLoss: "",
   takeProfit: "",
-  result: "WIN",
   pnl: "",
   strategy: "",
   session: "LONDON",
@@ -47,7 +46,6 @@ const requiredFields = [
   "entryPrice",
   "stopLoss",
   "takeProfit",
-  "result",
   "pnl",
   "strategy",
   "session",
@@ -131,37 +129,25 @@ function AddTrade() {
   function handleChange(event) {
     const { name, value } = event.target;
 
-    if (name === "result") {
-      setForm((current) => {
-        const raw = Number(current.pnl);
-        const amount = Number.isFinite(raw) ? Math.abs(raw) : 0;
-        const nextPnl =
-          value === "WIN"
-            ? (amount ? String(amount) : "")
-            : value === "LOSS"
-            ? (amount ? String(-amount) : "")
-            : "0";
-        return { ...current, result: value, pnl: nextPnl };
-      });
-    } else if (name === "pnl") {
-      const digitsOnly = String(value).replace(/[^0-9.]/g, "");
-      const numeric = Number(digitsOnly);
-      const amount = Number.isFinite(numeric) ? Math.abs(numeric) : 0;
-      setForm((current) => ({
-        ...current,
-        pnl:
-          current.result === "LOSS"
-            ? (amount ? String(-amount) : "")
-            : current.result === "BREAKEVEN"
-            ? "0"
-            : (amount ? String(amount) : ""),
-      }));
+    if (name === "pnl") {
+      const normalized = String(value).replace(/[^0-9.-]/g, "");
+      const sanitized = normalized.replace(/(?!^)-/g, "");
+      setForm((current) => ({ ...current, pnl: sanitized }));
     } else {
       setForm((current) => ({ ...current, [name]: value }));
     }
 
     setTouched((current) => ({ ...current, [name]: true }));
     setError("");
+  }
+
+  function deriveResultFromPnl(pnl) {
+    if (pnl === "" || pnl === null || pnl === undefined) return "";
+    const value = Number(pnl);
+    if (!Number.isFinite(value)) return "";
+    if (value > 0) return "WIN";
+    if (value < 0) return "LOSS";
+    return "BREAKEVEN";
   }
 
   function touchField(name) {
@@ -176,7 +162,11 @@ function AddTrade() {
     );
     setTouched(allTouched);
     
-    const submitForm = { ...form, accountId: effectiveAccountId };
+    const submitForm = {
+      ...form,
+      accountId: effectiveAccountId,
+      result: deriveResultFromPnl(form.pnl),
+    };
     const errors = validateForm(submitForm, t);
     if (Object.keys(errors).length > 0) {
       setError(t("fixFormErrors"));
@@ -340,38 +330,39 @@ function AddTrade() {
               <p className="mt-1 text-[11px] text-slate-400">{t("riskRewardDescription")}</p>
             </div>
 
-            <Field label={t("result")} error={showError("result")}>
-              <Select
-                value={form.result}
-                onChange={(value) => handleChange({ target: { name: "result", value } })}
-                options={[
-                  { value: "WIN", label: t("win") },
-                  { value: "LOSS", label: t("loss") },
-                  { value: "BREAKEVEN", label: t("breakeven") },
-                ]}
-              />
-            </Field>
+            <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/60">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">{t("result")}</p>
+              <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">
+                {deriveResultFromPnl(form.pnl) === "WIN"
+                  ? t("win")
+                  : deriveResultFromPnl(form.pnl) === "LOSS"
+                  ? t("loss")
+                  : deriveResultFromPnl(form.pnl) === "BREAKEVEN"
+                  ? t("breakeven")
+                  : "—"}
+              </p>
+              <p className="mt-1 text-[11px] text-slate-400">{t("autoResult")}</p>
+            </div>
 
             <Field label={t("pnl")} error={showError("pnl")}>
               <input
                 className="input"
                 type="number"
-                min="0"
                 step="0.01"
                 name="pnl"
-                value={Math.abs(Number(form.pnl || 0)) || ""}
+                value={form.pnl}
                 onChange={handleChange}
                 onBlur={() => touchField("pnl")}
-                placeholder={form.result === "BREAKEVEN" ? "0.00" : "125.50"}
-                disabled={form.result === "BREAKEVEN"}
+                placeholder="125.50"
               />
-
               <p className="mt-1.5 text-xs text-slate-400">
-                {form.result === "LOSS"
-                  ? "Loss akan otomatis disimpan sebagai nilai negatif."
-                  : form.result === "WIN"
-                  ? "Profit akan otomatis disimpan sebagai nilai positif."
-                  : "Break-even otomatis disimpan sebagai 0."}
+                {deriveResultFromPnl(form.pnl) === "WIN"
+                  ? t("pnlPositiveHint")
+                  : deriveResultFromPnl(form.pnl) === "LOSS"
+                  ? t("pnlNegativeHint")
+                  : deriveResultFromPnl(form.pnl) === "BREAKEVEN"
+                  ? t("pnlZeroHint")
+                  : t("autoResult")}
               </p>
             </Field>
 

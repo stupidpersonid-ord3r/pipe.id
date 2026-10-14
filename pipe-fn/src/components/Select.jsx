@@ -1,12 +1,13 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown } from "lucide-react";
+import { useLanguage } from "../hooks/useLanguage";
 
 function Select({
   value,
   onChange,
   options,
-  placeholder = "Select",
+  placeholder,
   disabled = false,
   required = false,
   className = "",
@@ -14,12 +15,14 @@ function Select({
   id,
   "aria-label": ariaLabel,
 }) {
+  const { t } = useLanguage();
   const rootRef = useRef(null);
   const faceRef = useRef(null);
   const menuRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [menuStyle, setMenuStyle] = useState(null);
   const selected = options.find((option) => String(option.value) === String(value));
+  const selectPlaceholder = placeholder || t("select");
 
   useLayoutEffect(() => {
     if (!open || disabled || !faceRef.current) return undefined;
@@ -96,7 +99,7 @@ function Select({
         className="custom-select-face w-full text-left"
       >
         <span className={selected ? "custom-select-value" : "custom-select-placeholder"}>
-          {selected?.label || placeholder}
+          {selected?.label || selectPlaceholder}
         </span>
         <ChevronDown size={16} className={`custom-select-chevron ${open ? "rotate-180" : ""}`} />
       </button>
@@ -107,7 +110,7 @@ function Select({
           className="select-menu custom-select-menu overflow-y-auto rounded-2xl p-1.5"
           style={menuStyle}
           role="listbox"
-          aria-label={ariaLabel || placeholder}
+          aria-label={ariaLabel || selectPlaceholder}
         >
           {options.map((option) => {
             const isSelected = String(option.value) === String(value);

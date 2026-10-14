@@ -215,11 +215,11 @@ function Analytics() {
       <div className="max-w-7xl">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-slate-900">
-            Analytics
+            {t("analytics")}
           </h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Analyze your trading performance.
+            {t("analyzeTradingPerformance")}
           </p>
         </div>
 
@@ -232,12 +232,11 @@ function Analytics() {
           </div>
 
           <h2 className="mt-4 text-base font-semibold text-slate-900">
-            No analytics available yet
+            {t("analyticsEmptyTitle")}
           </h2>
 
           <p className="mx-auto mt-1 max-w-md text-sm text-slate-500">
-            Add some trades to start analyzing your
-            trading performance.
+            {t("analyticsEmptyDescription")}
           </p>
         </div>
       </div>
@@ -249,12 +248,11 @@ function Analytics() {
       {/* HEADER */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-900">
-          Analytics
+          {t("analytics")}
         </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          Analyze your trading performance and
-          discover patterns in your trades.
+          {t("analyticsHeaderDescription")}
         </p>
       </div>
 
@@ -281,26 +279,26 @@ function Analytics() {
           {/* MAIN STATS */}
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             <AnalyticsCard
-              title="Total Trades"
+              title={t("totalTrades")}
               value={analytics.totalTrades}
-              description={`${analytics.wins} wins · ${analytics.losses} losses`}
+              description={t("totalTradesDescription").replace("{wins}", String(analytics.wins)).replace("{losses}", String(analytics.losses))}
               icon={<BarChart3 size={19} />}
             />
 
             <AnalyticsCard
-              title="Win Rate"
+              title={t("winRate")}
               value={`${analytics.winRate.toFixed(1)}%`}
-              description="Winning trades percentage"
+              description={t("winningTradesPercentage")}
               icon={<Target size={19} />}
             />
 
             <AnalyticsCard
-              title="Net P&L"
+              title={t("netPnl")}
               value={formatPnl(analytics.totalPnl)}
               description={
                 analytics.totalPnl >= 0
-                  ? "Overall positive performance"
-                  : "Overall negative performance"
+                  ? t("overallPositivePerformance")
+                  : t("overallNegativePerformance")
               }
               icon={
                 analytics.totalPnl >= 0 ? (
@@ -319,9 +317,9 @@ function Analytics() {
             />
 
             <AnalyticsCard
-              title="Profit Factor"
+              title={t("profitFactor")}
               value={analytics.profitFactor.toFixed(2)}
-              description="Gross profit ÷ gross loss"
+              description={t("grossProfitLossRatio")}
               icon={<Activity size={19} />}
             />
           </div>
@@ -329,7 +327,7 @@ function Analytics() {
           {/* SECONDARY STATS */}
           <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
             <MetricCard
-              title="Average Win"
+              title={t("averageWin")}
               value={`+${formatNumber(
                 analytics.averageWin
               )}`}
@@ -337,7 +335,7 @@ function Analytics() {
             />
 
             <MetricCard
-              title="Average Loss"
+              title={t("averageLoss")}
               value={`-${formatNumber(
                 analytics.averageLoss
               )}`}
@@ -345,7 +343,7 @@ function Analytics() {
             />
 
             <MetricCard
-              title="Gross Profit"
+              title={t("grossProfit")}
               value={`+${formatNumber(
                 analytics.grossProfit
               )}`}
@@ -353,7 +351,7 @@ function Analytics() {
             />
 
             <MetricCard
-              title="Gross Loss"
+              title={t("grossLoss")}
               value={`-${formatNumber(
                 analytics.grossLoss
               )}`}
@@ -371,31 +369,34 @@ function Analytics() {
           <section className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-200 px-6 py-5">
               <h2 className="text-base font-semibold text-slate-900">
-                Trade Results
+                {t("tradeResults")}
               </h2>
 
               <p className="mt-1 text-sm text-slate-500">
-                Distribution of your trading results.
+                {t("tradeResultsDistribution")}
               </p>
             </div>
 
             <div className="grid gap-6 p-6 sm:grid-cols-3">
               <ResultCard
-                label="Wins"
+                t={t}
+                label={t("wins")}
                 value={analytics.wins}
                 total={analytics.totalTrades}
                 className="text-green-600"
               />
 
               <ResultCard
-                label="Losses"
+                t={t}
+                label={t("losses")}
                 value={analytics.losses}
                 total={analytics.totalTrades}
                 className="text-red-600"
               />
 
               <ResultCard
-                label="Breakeven"
+                t={t}
+                label={t("breakeven")}
                 value={analytics.breakevens}
                 total={analytics.totalTrades}
                 className="text-slate-600"
@@ -406,34 +407,35 @@ function Analytics() {
           {/* PERFORMANCE TABLES */}
           <div className="mt-6 grid gap-6 xl:grid-cols-2">
             <PerformanceTable
-              title="Performance by Pair"
-              description="See which instruments perform best."
+              title={t("performanceByPair")}
+              description={t("performanceByPairDescription")}
               data={analytics.byPair}
+              t={t}
             />
 
             <PerformanceTable
-              title="Performance by Strategy"
-              description="Compare your trading strategies."
+              title={t("performanceByStrategy")}
+              description={t("performanceByStrategyDescription")}
               data={analytics.byStrategy}
+              t={t}
             />
 
             <PerformanceTable
-              title="Performance by Session"
-              description="Analyze your preferred trading sessions."
+              title={t("performanceBySession")}
+              description={t("performanceBySessionDescription")}
               data={analytics.bySession}
+              t={t}
             />
 
             {/* PSYCHOLOGY */}
             <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm xl:col-span-2">
               <div className="border-b border-slate-200 px-6 py-5">
                 <h2 className="text-base font-semibold text-slate-900">
-                  Psychology at Entry
+                  {t("psychologyEntryTitle")}
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  Understand how your mindset at entry
-                  is distributed and how each mindset
-                  performs.
+                  {t("psychologyEntryDescription")}
                 </p>
               </div>
 
@@ -455,13 +457,15 @@ function Analytics() {
             </section>
 
             <PerformanceTable
-              title="Performance by Psychology"
-              description="Compare win rate and P&L for each entry mindset."
+              title={t("performanceByPsychology")}
+              description={t("performanceByPsychologyDescription")}
               data={analytics.byPsychology}
+              t={t}
             />
 
             <BestWorstCard
               data={analytics.byPair}
+              t={t}
             />
           </div>
         </>
@@ -523,6 +527,7 @@ function MetricCard({
 }
 
 function ResultCard({
+  t,
   label,
   value,
   total,
@@ -546,7 +551,7 @@ function ResultCard({
       </div>
 
       <p className="mt-1 text-xs text-slate-400">
-        {percentage.toFixed(1)}% of total trades
+        {t("percentageOfTotalTrades").replace("{percentage}", percentage.toFixed(1))}
       </p>
 
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
@@ -565,6 +570,7 @@ function PerformanceTable({
   title,
   description,
   data,
+  t,
 }) {
   return (
     <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -583,23 +589,23 @@ function PerformanceTable({
           <thead className="sticky top-0 z-20 border-b border-slate-200 bg-slate-50">
             <tr>
               <th className="w-[36%] whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Name
+                {t("name")}
               </th>
 
               <th className="w-[13%] whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Trades
+                {t("trades")}
               </th>
 
               <th className="w-[19%] whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Win Rate
+                {t("winRate")}
               </th>
 
               <th className="w-[12%] whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                R:R
+                {t("riskReward")}
               </th>
 
               <th className="w-[20%] whitespace-nowrap px-5 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
-                P&L
+                {t("pnl")}
               </th>
             </tr>
           </thead>
@@ -648,7 +654,7 @@ function PerformanceTable({
   );
 }
 
-function BestWorstCard({ data }) {
+function BestWorstCard({ data, t }) {
   const best = data[0];
 
   const worst =
@@ -662,19 +668,18 @@ function BestWorstCard({ data }) {
     <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-200 px-6 py-5">
         <h2 className="text-base font-semibold text-slate-900">
-          Best & Worst Pair
+          {t("bestWorstPair")}
         </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Quick overview of your strongest and weakest
-          instruments.
+          {t("bestWorstPairDescription")}
         </p>
       </div>
 
       <div className="space-y-6 p-6">
         <div className="rounded-lg border border-slate-100 p-4">
           <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-            Best Pair
+            {t("bestPair")}
           </p>
 
           <p className="mt-2 text-lg font-bold text-slate-900">
@@ -688,7 +693,7 @@ function BestWorstCard({ data }) {
 
         <div className="rounded-lg border border-slate-100 p-4">
           <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-            Worst Pair
+            {t("worstPair")}
           </p>
 
           <p className="mt-2 text-lg font-bold text-slate-900">

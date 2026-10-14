@@ -7,6 +7,7 @@ import { useLanguage } from "../hooks/useLanguage";
 import { useJournalData } from "../hooks/useJournalData";
 
 function AccountStatusDot({ type }) {
+  const { t } = useLanguage();
   const isDemo = String(type || "").toUpperCase() === "DEMO";
 
   return (
@@ -14,8 +15,8 @@ function AccountStatusDot({ type }) {
       className={`inline-block h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-white/70 dark:ring-slate-900 ${
         isDemo ? "bg-amber-400" : "bg-emerald-500"
       }`}
-      title={isDemo ? "DEMO" : "LIVE"}
-      aria-label={isDemo ? "DEMO" : "LIVE"}
+      title={isDemo ? t("demo") : t("live")}
+      aria-label={isDemo ? t("demo") : t("live")}
     />
   );
 }
@@ -45,7 +46,7 @@ function AccountSelector() {
   return (
     <div className="flex min-w-0 items-center gap-2">
       <span className="hidden shrink-0 text-xs font-semibold text-slate-500 dark:text-slate-400 sm:inline">
-        Account
+        {t("account")}
       </span>
 
       <div ref={rootRef} className="relative min-w-0">
@@ -167,7 +168,7 @@ function Header() {
   const profileRef = useRef(null);
 
   const traderName =
-    profile?.traderName || user?.email?.split("@")[0] || "Trader";
+    profile?.traderName || user?.email?.split("@")[0] || t("traderFallback");
 
   const journalName = profile?.journalName || "PIPE.ID";
   const avatarUrl = profile?.avatarUrl || "";

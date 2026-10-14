@@ -352,10 +352,10 @@ function Calendar() {
             onChange={setResultFilter}
           >
             <option value="all">{t("allResults")}</option>
-            <option value="WIN">WIN</option>
-            <option value="LOSS">LOSS</option>
+            <option value="WIN">{t("win")}</option>
+            <option value="LOSS">{t("loss")}</option>
             <option value="BREAKEVEN">
-              BREAKEVEN
+              {t("breakeven")}
             </option>
           </FilterSelect>
 
@@ -667,7 +667,7 @@ function Calendar() {
                             : "font-semibold text-red-600"
                         }
                       >
-                        {trade.direction}
+                        {trade.direction === "BUY" ? t("buy") : t("sell")}
                       </span>
                     </td>
 
@@ -714,7 +714,7 @@ function Calendar() {
                         to={`/trades/${trade.id}`}
                         className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
                       >
-                        View
+                        {t("view")}
                         <ArrowUpRight size={15} />
                       </Link>
                     </td>

@@ -6,9 +6,9 @@ import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../hooks/useLanguage";
 import { formatRiskReward, getRiskReward } from "../../utils/riskReward";
 
-function formatDate(date) {
+function formatDate(date, language = "EN") {
   if (!date) return "-";
-  return new Date(`${date}T00:00:00`).toLocaleDateString("en-GB", {
+  return new Date(`${date}T00:00:00`).toLocaleDateString(language === "ID" ? "id-ID" : "en-GB", {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -55,7 +55,7 @@ function normalizeTrade(trade) {
 function TradeDetail() {
   const { id } = useParams();
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [trade, setTrade] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -187,7 +187,7 @@ function TradeDetail() {
           </div>
 
           <p className="mt-2 text-sm text-slate-500">
-            {formatDate(trade.tradeDate)} · {trade.accountName}
+            {formatDate(trade.tradeDate, language)} · {trade.accountName}
           </p>
         </div>
 
@@ -201,7 +201,7 @@ function TradeDetail() {
                 : "bg-slate-100 text-slate-600"
             }`}
           >
-            {trade.result}
+            {trade.result === "WIN" ? t("win") : trade.result === "LOSS" ? t("loss") : t("breakeven")}
           </span>
 
           <p
@@ -225,7 +225,7 @@ function TradeDetail() {
         />
 
         <div className="grid gap-6 p-6 sm:grid-cols-2 lg:grid-cols-3">
-          <InfoItem label={t("tradeDate")} value={formatDate(trade.tradeDate)} />
+          <InfoItem label={t("tradeDate")} value={formatDate(trade.tradeDate, language)} />
           <InfoItem label={t("account")} value={trade.accountName} />
           <InfoItem label={t("pair")} value={trade.pair} />
           <InfoItem label={t("direction")} value={trade.direction} />

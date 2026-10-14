@@ -201,7 +201,7 @@ function ProfileSettings() {
     } catch (error) {
       setProfileError(
         error.message ||
-          "Failed to save profile.",
+          t("profileSaveFailed"),
       );
       setSavingProfile(false);
       return;
@@ -238,7 +238,7 @@ function ProfileSettings() {
     );
 
     setProfileMessage(
-      "Profile saved successfully.",
+      t("profileSaved"),
     );
     setSavingProfile(false);
   }
@@ -296,7 +296,7 @@ function ProfileSettings() {
 
   function validateImage(file) {
     if (!file) {
-      return "No image selected.";
+      return t("noImageSelected");
     }
 
     const allowedTypes = [
@@ -306,14 +306,14 @@ function ProfileSettings() {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      return "Only JPG, PNG, and WebP images are allowed.";
+      return t("imageTypesOnly");
     }
 
     const maxSourceSize =
       12 * 1024 * 1024;
 
     if (file.size > maxSourceSize) {
-      return "Profile image must be smaller than 12 MB.";
+      return t("imageTooLarge");
     }
 
     return null;
@@ -336,10 +336,10 @@ function ProfileSettings() {
       const avatarUrl = dataUrl;
       setSettings((current) => ({ ...current, avatarUrl }));
       window.dispatchEvent(new CustomEvent("profilechange", { detail: { traderName: settings.traderName, journalName: settings.journalName, avatarUrl } }));
-      setProfileMessage("Profile photo updated successfully.");
+      setProfileMessage(t("photoUpdated"));
     } catch (error) {
       console.error("Avatar upload error:", error);
-      setProfileError(error.message || "Failed to upload profile photo.");
+      setProfileError(error.message || t("photoUploadFailed"));
     } finally { setUploadingAvatar(false); }
   }
 
@@ -435,7 +435,7 @@ function ProfileSettings() {
         "NotAllowedError"
       ) {
         message =
-          "Camera permission was denied. Please allow camera access in your browser.";
+          t("legacyCameraPermission");
       }
 
       if (
@@ -443,7 +443,7 @@ function ProfileSettings() {
         "NotFoundError"
       ) {
         message =
-          "No camera was found on this device.";
+          t("legacyNoCamera");
       }
 
       if (
@@ -451,7 +451,7 @@ function ProfileSettings() {
         "NotReadableError"
       ) {
         message =
-          "Camera is already being used by another application.";
+          t("legacyCameraBusy");
       }
 
       setCameraError(message);
@@ -570,7 +570,7 @@ function ProfileSettings() {
       (blob) => {
         if (!blob) {
           setCameraError(
-            "Failed to capture photo.",
+            t("legacyCaptureFailed"),
           );
           return;
         }
@@ -624,10 +624,10 @@ function ProfileSettings() {
       await updateProfile({ avatarUrl: null });
       setSettings((current) => ({ ...current, avatarUrl: "" }));
       window.dispatchEvent(new CustomEvent("profilechange", { detail: { traderName: settings.traderName, journalName: settings.journalName, avatarUrl: "" } }));
-      setProfileMessage("Profile photo removed successfully.");
+      setProfileMessage(t("photoRemoved"));
     } catch (error) {
       console.error("Delete avatar error:", error);
-      setProfileError(error.message || "Failed to remove profile photo.");
+      setProfileError(error.message || t("photoRemoveFailed"));
     } finally { setDeletingAvatar(false); setShowDeleteConfirm(false); }
   }
 
@@ -641,7 +641,7 @@ function ProfileSettings() {
               type="button"
               onClick={closeCamera}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm"
-              aria-label="Close camera"
+              aria-label={t("closeCamera")}
             >
               <X size={20} />
             </button>
@@ -651,7 +651,7 @@ function ProfileSettings() {
               onClick={switchCamera}
               disabled={Boolean(cameraError)}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm disabled:cursor-not-allowed disabled:opacity-50"
-              aria-label="Switch camera"
+              aria-label={t("switchCamera")}
             >
               <RotateCcw size={20} />
             </button>
@@ -679,7 +679,7 @@ function ProfileSettings() {
               onClick={closeCamera}
               className="min-h-10 rounded-lg bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm"
             >
-              Batal
+              {t("cancelAction")}
             </button>
 
             <button
@@ -687,7 +687,7 @@ function ProfileSettings() {
               onClick={capturePhoto}
               disabled={!cameraReady || Boolean(cameraError)}
               className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-white disabled:cursor-not-allowed disabled:opacity-50"
-              aria-label="Capture photo"
+              aria-label={t("capturePhoto")}
             >
               <span className="h-12 w-12 rounded-full border border-slate-300" />
             </button>
@@ -698,7 +698,7 @@ function ProfileSettings() {
               disabled={Boolean(cameraError)}
               className="min-h-10 rounded-lg bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Ganti
+              {t("switchCamera")}
             </button>
           </div>
         </div>
@@ -718,14 +718,11 @@ function ProfileSettings() {
 
             <div>
               <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-                Delete profile photo?
+                {t("deleteProfilePhotoTitle")}
               </h3>
 
               <p className="mt-1 text-sm leading-5 text-slate-500 dark:text-slate-400">
-                This will permanently
-                remove your current
-                profile photo. This
-                action cannot be undone.
+                {t("deleteProfilePhotoDescription")}
               </p>
             </div>
           </div>
@@ -741,7 +738,7 @@ function ProfileSettings() {
               disabled={deletingAvatar}
               className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:focus:ring-slate-500 dark:focus:ring-offset-slate-900"
             >
-              Cancel
+              {t("cancelAction")}
             </button>
 
             <button
@@ -758,7 +755,7 @@ function ProfileSettings() {
               <Trash2 size={16} />
 
               {deletingAvatar
-                ? "Deleting..."
+                ? t("deletingAction")
                 : t("deletePhoto")}
             </button>
           </div>
@@ -772,12 +769,11 @@ function ProfileSettings() {
       <div className="page-enter mx-auto max-w-4xl space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-            Profile
+            {t("profilePageTitle")}
           </h1>
 
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Manage your profile,
-            appearance, and security.
+            {t("profilePageDescription")}
           </p>
         </div>
 
@@ -790,7 +786,7 @@ function ProfileSettings() {
 
               <div>
                 <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-                  Profile
+                  {t("profilePageTitle")}
                 </h2>
 
                 <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -962,7 +958,7 @@ function ProfileSettings() {
                 htmlFor="traderName"
                 className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200"
               >
-                Trader Name
+                {t("traderName")}
               </label>
 
               <input
@@ -987,7 +983,7 @@ function ProfileSettings() {
                 htmlFor="journalName"
                 className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200"
               >
-                Journal Name
+                {t("journalName")}
               </label>
 
               <input
@@ -1030,8 +1026,8 @@ function ProfileSettings() {
                 <Save size={16} />
 
                 {savingProfile
-                  ? "Saving..."
-                  : "Save Profile"}
+                  ? t("saving")
+                  : t("saveProfile")}
               </button>
             </div>
           </form>

@@ -59,7 +59,7 @@ function Register() {
     setEmailTouched(true);
 
     if (!/^[a-z0-9._%+-]+@gmail\.com$/.test(form.email.trim())) {
-      setError("Email must use lowercase letters and end in @gmail.com.");
+      setError(t("emailGmailLowercase"));
       return;
     }
 

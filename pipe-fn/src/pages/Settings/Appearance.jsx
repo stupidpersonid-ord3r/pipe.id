@@ -3,9 +3,11 @@ import { Palette, RefreshCw } from "lucide-react";
 import { useProfile } from "../../hooks/useProfile";
 import { useJournalData } from "../../hooks/useJournalData";
 import Select from "../../components/Select";
+import { useLanguage } from "../../hooks/useLanguage";
 
 export default function Appearance() {
   const { profile, updateProfile } = useProfile();
+  const { t } = useLanguage();
   const {
     autoRefresh,
     setAutoRefresh,
@@ -47,9 +49,9 @@ export default function Appearance() {
 
     try {
       await updateProfile({ theme: nextTheme });
-      setMessage("Theme saved successfully.");
+      setMessage(t("themeSaved"));
     } catch (err) {
-      setError(err.message || "Failed to save theme.");
+      setError(err.message || t("themeSaveFailed"));
     } finally {
       setSaving(false);
     }
@@ -59,10 +61,10 @@ export default function Appearance() {
     <div className="page-enter mx-auto max-w-4xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-          Appearance
+          {t("appearance")}
         </h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Control the theme and automatic journal refresh behavior.
+          {t("settingsThemeDescription")}
         </p>
       </div>
 
@@ -74,10 +76,10 @@ export default function Appearance() {
             </div>
             <div>
               <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-                Theme
+                {t("theme")}
               </h2>
               <p className="text-sm text-slate-500 dark:text-slate-400">
-                Choose how PIPE.ID looks on your device.
+                {t("chooseThemeDescription")}
               </p>
             </div>
           </div>
@@ -86,15 +88,15 @@ export default function Appearance() {
         <div className="space-y-5 p-6">
           <div className="sm:max-w-sm">
             <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
-              Theme
+              {t("theme")}
             </label>
             <Select
               value={theme}
               onChange={handleThemeChange}
               options={[
-                { value: "light", label: "Light" },
-                { value: "dark", label: "Dark" },
-                { value: "system", label: "System" },
+                { value: "light", label: t("light") },
+                { value: "dark", label: t("dark") },
+                { value: "system", label: t("system") },
               ]}
             />
           </div>
@@ -102,10 +104,10 @@ export default function Appearance() {
           <div className="flex items-center justify-between gap-4 border-t border-slate-200 pt-5 dark:border-slate-800">
             <div>
               <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                {saving ? "Saving theme..." : "Theme preference"}
+                {saving ? t("savingTheme") : t("themePreference")}
               </p>
               <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                Your preference is saved to your account.
+                {t("themeSaved")}
               </p>
             </div>
             {message && (
@@ -131,10 +133,10 @@ export default function Appearance() {
             </div>
             <div>
               <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-                Auto Refresh
+                {t("autoRefresh")}
               </h2>
               <p className="text-sm text-slate-500 dark:text-slate-400">
-                Automatically refresh journal data at a selected interval.
+                {t("autoRefreshDescription")}
               </p>
             </div>
           </div>
@@ -144,10 +146,10 @@ export default function Appearance() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                Enable Auto Refresh
+                {t("enableAutoRefresh")}
               </p>
               <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                {autoRefresh ? "Currently enabled." : "Currently disabled."}
+                {autoRefresh ? t("currentlyEnabled") : t("currentlyDisabled")}
               </p>
             </div>
 
@@ -170,22 +172,22 @@ export default function Appearance() {
                   }`}
                 />
               </span>
-              {autoRefresh ? "On" : "Off"}
+              {autoRefresh ? t("on") : t("off")}
             </button>
           </div>
 
           <div className="border-t border-slate-200 pt-5 dark:border-slate-800 sm:max-w-sm">
             <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
-              Refresh Interval
+              {t("refreshInterval")}
             </label>
             <Select
               value={String(refreshInterval)}
               onChange={(value) => setRefreshInterval(Number(value))}
               options={[
-                { value: "15000", label: "15 seconds" },
-                { value: "30000", label: "30 seconds" },
-                { value: "60000", label: "1 minute" },
-                { value: "300000", label: "5 minutes" },
+                { value: "15000", label: t("fifteenSeconds") },
+                { value: "30000", label: t("thirtySeconds") },
+                { value: "60000", label: t("oneMinute") },
+                { value: "300000", label: t("fiveMinutes") },
               ]}
             />
           </div>

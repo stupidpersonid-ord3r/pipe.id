@@ -1,42 +1,24 @@
 import { Link } from "react-router-dom";
 import { UserRound, Palette, ShieldCheck, Database } from "lucide-react";
+import { useLanguage } from "../../hooks/useLanguage";
 
 const items = [
-  {
-    to: "/settings/profile",
-    title: "Profile",
-    description: "Trader name, journal name, and profile photo.",
-    icon: UserRound,
-  },
-  {
-    to: "/settings/appearance",
-    title: "Appearance",
-    description: "Theme and automatic refresh preferences.",
-    icon: Palette,
-  },
-  {
-    to: "/settings/security",
-    title: "Security",
-    description: "Password, email, backup email, and phone / WhatsApp.",
-    icon: ShieldCheck,
-  },
-  {
-    to: "/settings/data",
-    title: "Data Management",
-    description: "Export and import your journal data.",
-    icon: Database,
-  },
+  { to: "/settings/profile", titleKey: "profilePageTitle", descriptionKey: "profileSectionDescription", icon: UserRound },
+  { to: "/settings/appearance", titleKey: "appearance", descriptionKey: "appearanceSectionDescription", icon: Palette },
+  { to: "/settings/security", titleKey: "security", descriptionKey: "securitySectionDescription", icon: ShieldCheck },
+  { to: "/settings/data", titleKey: "dataSectionTitle", descriptionKey: "dataSectionDescription", icon: Database },
 ];
 
 export default function SettingsHome() {
+  const { t } = useLanguage();
   return (
     <div className="page-enter mx-auto max-w-4xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-          Settings
+          {t("settingsPageTitle")}
         </h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Keep each setting organized in its own section.
+          {t("settingsPageDescription")}
         </p>
       </div>
 
@@ -54,10 +36,10 @@ export default function SettingsHome() {
                 <Icon size={20} />
               </div>
               <h2 className="mt-4 text-base font-semibold text-slate-900 dark:text-white">
-                {item.title}
+                {t(item.titleKey)}
               </h2>
               <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                {item.description}
+                {t(item.descriptionKey)}
               </p>
             </Link>
           );

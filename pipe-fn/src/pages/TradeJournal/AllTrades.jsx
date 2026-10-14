@@ -23,7 +23,7 @@ function formatPnl(value) {
 
 function AllTrades() {
   const { visibleTrades: trades, loading, error, refresh } = useJournalData();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [page, setPage] = useState(1);
   const pageSize = 50;
 
@@ -38,7 +38,7 @@ function AllTrades() {
   }, [trades, safePage]);
 
   if (loading) {
-    return <Status message="Loading trades..." />;
+    return <Status message={t("loadingTrades")} />;
   }
 
   if (error) {
@@ -70,7 +70,7 @@ function AllTrades() {
             onClick={refresh}
             className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
-            Refresh
+            {t("refresh")}
           </button>
 
           <Link
@@ -78,7 +78,7 @@ function AllTrades() {
             className="flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
           >
             <Plus size={17} />
-            Add Trade
+            {t("addTrade")}
           </Link>
         </div>
       </div>
@@ -90,7 +90,7 @@ function AllTrades() {
           </div>
 
           <h2 className="mt-4 text-base font-semibold text-slate-900">
-            No trades yet
+            {t("noTradesYet")}
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
@@ -102,7 +102,7 @@ function AllTrades() {
             className="mt-5 inline-flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
           >
             <Plus size={17} />
-            Add Trade
+            {t("addTrade")}
           </Link>
         </div>
       ) : (
@@ -137,7 +137,7 @@ function AllTrades() {
                   {pagedTrades.map((trade) => (
                     <tr key={trade.id} className="transition hover:bg-slate-50">
                       <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-700">
-                        {formatDate(trade.tradeDate)}
+                        {formatDate(trade.tradeDate, language)}
                       </td>
 
                       <td className="px-5 py-4 text-sm font-medium text-slate-900">
@@ -210,7 +210,7 @@ function AllTrades() {
                           to={`/trades/${trade.id}`}
                           className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
                         >
-                          View
+                          {t("view")}
                           <ArrowUpRight size={15} />
                         </Link>
                       </td>
@@ -223,7 +223,7 @@ function AllTrades() {
             {totalPages > 1 && (
               <div className="flex flex-col gap-3 border-t border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs text-slate-500">
-                  {Math.min((safePage - 1) * pageSize + 1, trades.length)}–{Math.min(safePage * pageSize, trades.length)} of {trades.length}
+                  {Math.min((safePage - 1) * pageSize + 1, trades.length)}–{Math.min(safePage * pageSize, trades.length)} {t("of")} {trades.length}
                 </p>
                 <div className="flex items-center gap-2">
                   <button
@@ -232,10 +232,10 @@ function AllTrades() {
                     onClick={() => setPage((current) => Math.max(1, current - 1))}
                     className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Previous
+                    {t("previous")}
                   </button>
                   <span className="min-w-20 text-center text-xs font-medium text-slate-600">
-                    Page {safePage} / {totalPages}
+                    {t("page")} {safePage} / {totalPages}
                   </span>
                   <button
                     type="button"
@@ -243,7 +243,7 @@ function AllTrades() {
                     onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
                     className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Next
+                    {t("next")}
                   </button>
                 </div>
               </div>

@@ -84,7 +84,7 @@ export function ProfileProvider({ children }) {
           .from("profiles")
           .select("*")
           .eq("id", pipeUserId)
-          .single();
+          .maybeSingle();
 
         if (profileError) throw profileError;
 
@@ -149,8 +149,14 @@ export function ProfileProvider({ children }) {
 
       const { data, error } = await supabase
         .from("profiles")
-        .update(payload)
-        .eq("id", pipeUserId)
+        .upsert(
+          {
+            id: pipeUserId,
+            ...payload,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "id" },
+        )
         .select("*")
         .single();
 
